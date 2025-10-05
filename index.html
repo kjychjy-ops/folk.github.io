@@ -1,0 +1,3333 @@
+<!DOCTYPE html>
+<!-- saved from url=(0142)file:///C:/Users/kjy99/Desktop/%EC%84%B8%EC%8B%9C%ED%92%8D%EC%86%8D/%EB%8C%80%ED%99%94%ED%98%95_%EC%84%B8%EC%8B%9C%ED%92%8D%EC%86%8D.html.html -->
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>청도중앙초등학교 세시풍속 대화형 질문답변 시스템</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                #ff9a9e 0%, 
+                #fecfef 25%, 
+                #667eea 50%, 
+                #764ba2 75%, 
+                #ff9a9e 100%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            padding: 25px 80px 25px 25px;
+            text-align: center;
+            color: #333;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.8;
+        }
+
+        .subtitle {
+            font-size: 0.9em !important;
+            opacity: 0.7 !important;
+            margin-top: 8px !important;
+            font-style: italic;
+        }
+
+        .chat-container {
+            padding: 30px;
+            min-height: 400px;
+        }
+
+        .chat-messages {
+            height: 400px;
+            border: 2px solid #f0f0f0;
+            border-radius: 15px;
+            padding: 20px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            margin: 15px 0;
+            padding: 15px 20px;
+            border-radius: 15px;
+            position: relative;
+            animation: fadeInUp 0.3s ease-out;
+            word-wrap: break-word;
+            word-break: break-all;
+            overflow-wrap: break-word;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: right;
+            margin-left: 60px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .bot-message {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: #333;
+            text-align: left;
+            margin-right: 60px;
+            box-shadow: 0 4px 15px rgba(255, 154, 158, 0.3);
+        }
+
+        .input-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .question-input {
+            flex: 1;
+            padding: 18px 25px;
+            border: 2px solid #e0e0e0;
+            border-radius: 30px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .question-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .ask-button {
+            padding: 18px 35px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .ask-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .ask-button:active {
+            transform: translateY(0);
+        }
+
+        /* 관리자 메뉴 스타일 */
+        .admin-menu-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .admin-menu-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .admin-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 20px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 1001;
+            overflow-y: auto;
+        }
+
+        .admin-panel.active {
+            right: 0;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-admin {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .admin-content {
+            padding: 20px;
+        }
+
+        .admin-section {
+            margin-bottom: 30px;
+        }
+
+        .admin-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 5px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .question-log {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .question-item {
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .question-user {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 12px;
+        }
+
+        .question-text {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .question-time {
+            font-size: 11px;
+            color: #666;
+        }
+
+        /* 모달 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            text-align: right;
+            border-top: 1px solid #eee;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .message a {
+            color: #667eea;
+            text-decoration: underline;
+            word-break: break-all;
+            overflow-wrap: break-word;
+        }
+
+        .message a:hover {
+            color: #5a6fd8;
+            text-decoration: none;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 20px 60px 20px 20px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .admin-menu-toggle {
+                width: 45px;
+                height: 45px;
+                top: 15px;
+                right: 15px;
+            }
+
+            .admin-panel {
+                width: 100%;
+                right: -100%;
+            }
+
+            .user-message, .bot-message {
+                margin-left: 20px;
+                margin-right: 20px;
+            }
+
+            .chat-messages {
+                height: 300px;
+            }
+        }
+
+        /* 로딩 애니메이션 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .welcome-message {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .welcome-message h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .welcome-message p {
+            color: #666;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <h1>🏫 지뭉반 세시풍속 선생님</h1>
+            <p>지뭉반 친구들과 함께 배우는 우리나라 세시풍속!</p>
+            <p class="subtitle">우리 조상들의 지혜가 담긴 전통문화를 재미있게 배워보세요</p>
+        </div>
+
+        <!-- 관리자 메뉴 토글 버튼 -->
+        <button class="admin-menu-toggle" onclick="showAdminLogin()" title="관리자 메뉴">
+            ⚙️
+        </button>
+
+        <!-- 채팅 컨테이너 -->
+        <div class="chat-container">
+            <!-- 환영 메시지는 닉네임 입력 후에만 표시됩니다 -->
+
+            <!-- 채팅 메시지 영역 -->
+            <div class="chat-messages" id="chatMessages">
+                <!-- 인사말은 닉네임 입력 후에만 표시됩니다 -->
+            </div>
+
+            <!-- 입력 영역 -->
+            <div class="input-container">
+                <input type="text" class="question-input" id="questionInput" placeholder="세시풍속에 대해 질문해보세요... (예: 강강술래가 뭐야?)">
+                <button class="ask-button" onclick="askQuestion()">질문하기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 관리자 패널 -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h2>📊 관리자 패널</h2>
+            <button class="close-admin" onclick="toggleAdminMenu()">×</button>
+        </div>
+        <div class="admin-content">
+            <div class="admin-section">
+                <h3>📈 실시간 통계</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalQuestions">0</div>
+                        <div>총 질문 수</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="todayQuestions">0</div>
+                        <div>오늘 질문</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="activeUsers">0</div>
+                        <div>활성 사용자</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="popularTopics">0</div>
+                        <div>인기 주제</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <h3>📝 최근 질문 로그</h3>
+                <div class="question-log" id="questionLog">
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <h3>🔥 인기 질문</h3>
+                <div class="popular-questions" id="popularQuestions">
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <h3>🔍 키워드 분석</h3>
+                <div class="keyword-analysis" id="keywordAnalysis">
+                </div>
+            </div>
+
+            <div class="admin-actions">
+                <button class="btn btn-primary" onclick="exportData()">📤 데이터 내보내기</button>
+                <button class="btn btn-secondary" onclick="clearOldData()">🗑️ 오래된 데이터 삭제</button>
+                <button class="btn btn-danger" onclick="clearAllQuestionHistory()">🧹 모든 질문 기록 삭제</button>
+                <button class="btn btn-secondary" onclick="refreshStats()">🔄 통계 새로고침</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 닉네임 입력 모달 -->
+    <div class="modal" id="nicknameModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>👋 청도중앙초등학교에 오신 것을 환영합니다!</h2>
+                <button class="close" onclick="closeNicknameModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="nicknameInput">닉네임을 입력해주세요:</label>
+                    <input type="text" id="nicknameInput" placeholder="지뭉반 1번" maxlength="20">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="saveNickname()">시작하기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 관리자 로그인 모달 -->
+    <div class="modal" id="adminLoginModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔐 관리자 로그인</h2>
+                <button class="close" onclick="closeAdminLoginModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="adminPasswordInput">비밀번호를 입력해주세요:</label>
+                    <input type="password" id="adminPasswordInput" placeholder="비밀번호 입력">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="checkAdminPassword()">로그인</button>
+                <button class="btn btn-secondary" onclick="closeAdminLoginModal()">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 전역 변수
+        let currentUser = null;
+        const ADMIN_PASSWORD = "1234";
+        let adminData = {
+            questions: [],
+            users: new Set(),
+            keywords: {},
+            categories: {}
+        };
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ 페이지 로드 완료!');
+            
+            // 매번 닉네임 입력 모달 표시
+            showNicknameModal();
+            
+            // 관리자 데이터 로드
+            loadAdminData();
+            
+            // 엔터 키 이벤트 리스너
+            document.getElementById('questionInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    askQuestion();
+                }
+            });
+            
+            // 모달 외부 클릭 시 닫기
+            window.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal')) {
+                    closeNicknameModal();
+                    closeAdminLoginModal();
+                }
+            });
+        });
+
+        // 닉네임 모달 관련 함수들
+        function showNicknameModal() {
+            document.getElementById('nicknameModal').style.display = 'block';
+            document.getElementById('nicknameInput').focus();
+        }
+
+        function closeNicknameModal() {
+            document.getElementById('nicknameModal').style.display = 'none';
+        }
+
+        function saveNickname() {
+            const nickname = document.getElementById('nicknameInput').value.trim();
+            if (!nickname) {
+                alert('닉네임을 입력해주세요!');
+                return;
+            }
+            
+            currentUser = {
+                nickname: nickname,
+                loginTime: new Date().toISOString()
+            };
+            
+            closeNicknameModal();
+            
+            // 환영 메시지 표시
+            addMessage('bot', `안녕하세요, ${nickname}님! 세시풍속 선생님입니다. 우리나라 전통문화에 대해 궁금한 것이 있으시면 언제든 질문해주세요! 😊`);
+        }
+
+        // 관리자 관련 함수들
+        function showAdminLogin() {
+            document.getElementById('adminLoginModal').style.display = 'block';
+            document.getElementById('adminPasswordInput').focus();
+        }
+
+        function closeAdminLoginModal() {
+            document.getElementById('adminLoginModal').style.display = 'none';
+            document.getElementById('adminPasswordInput').value = '';
+        }
+
+        function checkAdminPassword() {
+            const password = document.getElementById('adminPasswordInput').value;
+            if (password === ADMIN_PASSWORD) {
+                closeAdminLoginModal();
+                toggleAdminMenu();
+                loadAdminData();
+            } else {
+                alert('비밀번호가 올바르지 않습니다!');
+            }
+        }
+
+        function toggleAdminMenu() {
+            const panel = document.getElementById('adminPanel');
+            panel.classList.toggle('active');
+        }
+
+        // 질문 처리 함수
+        function askQuestion() {
+            const input = document.getElementById('questionInput');
+            const question = input.value.trim();
+            
+            if (!question) {
+                alert('질문을 입력해주세요!');
+                return;
+            }
+            
+            if (!currentUser) {
+                alert('먼저 닉네임을 입력해주세요!');
+                showNicknameModal();
+                return;
+            }
+            
+            // 사용자 메시지 표시
+            addMessage('user', question);
+            input.value = '';
+            
+            // 로딩 표시
+            const loadingDiv = addMessage('bot', '<span class="loading"></span> 답변을 생성하고 있습니다...');
+            
+            // 답변 생성 (비동기)
+            setTimeout(() => {
+                const answer = findAnswer(question);
+                
+                // 로딩 메시지 제거
+                const messages = document.getElementById('chatMessages');
+                messages.removeChild(loadingDiv);
+                
+                // 실제 답변 표시
+                addMessage('bot', answer);
+                
+                // 관리자 데이터에 기록
+                logQuestion(question, answer);
+            }, 1000);
+        }
+
+        // 메시지 추가 함수
+        function addMessage(type, content) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}-message`;
+            
+            if (type === 'user') {
+                messageDiv.innerHTML = `<strong>${currentUser.nickname}:</strong> ${content}`;
+            } else {
+                // URL을 클릭 가능한 링크로 변환
+                const linkContent = content.replace(/https:\/\/[^\s]+/g, '<a href="$&" target="_blank">$&</a>');
+                messageDiv.innerHTML = `<strong>🏫 세시풍속 선생님:</strong> ${linkContent}`;
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            return messageDiv;
+        }
+
+        // 포괄적인 세시풍속 데이터베이스 (청도 지역 특화)
+        const sesiData = {
+            // 청도 지역 특화 정보
+            cheongdo: {
+                name: "경북 청도",
+                description: "청도는 경상북도에 위치한 전통문화가 풍부한 지역입니다.",
+                specialFestivals: {
+                    "청도달집태우기": {
+                        date: "정월대보름",
+                        description: "전국 최대 규모의 달집태우기 행사",
+                        location: "청도읍성 일대",
+                        participants: "약 2만명의 시민 참여",
+                        meaning: "한 해의 액운을 막고 복을 기원하는 전통 행사",
+                        details: "솔가지와 볏단을 쌓아 올린 거대한 달집에 불을 붙여 액운을 날리고 새해의 풍요를 기원합니다.",
+                        visualElements: ["달집", "불꽃", "시민들", "청도읍성"]
+                    }
+                },
+                culturalHeritage: {
+                    "청도읍성": {
+                        description: "고려시대부터 존재한 읍성으로 겨울철 야경 명소",
+                        significance: "정월대보름 등 전통 행사가 열리는 장소",
+                        history: "조선시대 선조 연간에 현재 규모로 완성"
+                    },
+                    "대비사대웅전": {
+                        description: "조선시대에 건립된 사찰",
+                        significance: "지역의 역사와 문화를 엿볼 수 있는 장소"
+                    }
+                }
+            },
+            // 봄편 세시풍속
+            spring: {
+                name: "봄편",
+                festivals: {
+                    "정월대보름": {
+                        date: "음력 1월 15일",
+                        description: "정월의 첫 보름달을 맞이하는 날",
+                        foods: ["오곡밥", "부럼", "귀밝이술", "나물", "오색나물", "약밥"],
+                        activities: ["달맞이", "지신밟기", "쥐불놀이", "줄다리기", "나무심기", "복조리만들기", "달집태우기"],
+                        meaning: "새해의 풍년과 건강을 기원하는 날",
+                        origin: "농경사회에서 풍년을 기원하고 액운을 쫓는 의미로 시작",
+                        details: "보름달을 보며 소원을 빌고, 다섯 가지 나물을 먹어 건강을 기원합니다.",
+                        cheongdoSpecial: {
+                            event: "청도달집태우기",
+                            description: "전국 최대 규모의 달집태우기 행사가 청도읍성에서 열립니다",
+                            participants: "약 2만명의 시민이 참여",
+                            significance: "청도 지역의 대표적인 정월대보름 행사"
+                        }
+                    },
+                    "한식": {
+                        date: "음력 2월 15일경",
+                        description: "조상의 묘에 성묘하는 날",
+                        foods: ["차례상", "제사음식", "한과", "약과", "다식"],
+                        activities: ["성묘", "벌초", "차례", "제사", "묘지정리"],
+                        meaning: "조상에 대한 추모와 효심을 표현하는 날",
+                        origin: "유교 사상에서 조상숭배의 의미로 시작된 풍습",
+                        details: "조상의 묘에 찾아가 제사를 지내고 묘지를 정리하는 효심의 표현입니다."
+                    },
+                    "삼짇날": {
+                        date: "음력 3월 3일",
+                        description: "봄의 화사함을 즐기는 날",
+                        foods: ["화전", "국화전", "화채", "진달래화전", "복숭아화전"],
+                        activities: ["화전놀이", "산놀이", "물놀이", "화구경", "봄나들이"],
+                        meaning: "봄의 아름다움을 감상하고 즐기는 날",
+                        origin: "중국의 상사절에서 유래하여 우리나라의 봄 축제로 발전",
+                        details: "봄꽃을 감상하고 화전을 만들어 먹으며 봄의 기쁨을 만끽하는 날입니다."
+                    },
+                    "청명": {
+                        date: "음력 3월 상순",
+                        description: "하늘이 맑고 밝은 날",
+                        foods: ["청명절식", "나물", "한과"],
+                        activities: ["성묘", "벌초", "산나들이", "등고"],
+                        meaning: "조상에게 인사하고 봄의 기운을 느끼는 날",
+                        origin: "24절기 중 하나로 조상숭배와 자연과의 조화를 의미",
+                        details: "하늘이 맑아지는 시기에 조상의 묘에 인사하고 봄의 신선한 기운을 느낍니다."
+                    },
+                    "한식": {
+                        date: "음력 4월 5일경",
+                        description: "불을 끄고 찬 음식을 먹는 날",
+                        foods: ["한과", "약과", "다식", "엿", "찬 음식"],
+                        activities: ["한식제", "불끄기", "차례", "제사"],
+                        meaning: "조상에 대한 추모와 효심을 표현하는 날",
+                        origin: "중국 진문공의 개자추 이야기에서 유래된 풍습",
+                        details: "불을 끄고 찬 음식만 먹으며 조상을 추모하는 의미의 날입니다."
+                    }
+                }
+            },
+            
+            // 여름편 세시풍속
+            summer: {
+                name: "여름편",
+                festivals: {
+                    "단오": {
+                        date: "음력 5월 5일",
+                        description: "여름의 대표적인 명절",
+                        foods: ["수리취떡", "창포주", "단오주", "제호탕", "단오떡", "창포떡"],
+                        activities: ["창포물 머리감기", "그네뛰기", "씨름", "활쏘기", "창포놀이", "단오놀이"],
+                        meaning: "여름의 시작과 건강, 액운을 쫓는 날",
+                        origin: "중국에서 전래된 명절로, 우리나라에서는 여름의 대표적인 명절로 발전",
+                        details: "창포로 머리를 감고 수리취떡을 먹으며 여름의 건강과 액운을 쫓는 의미입니다."
+                    },
+                    "유두": {
+                        date: "음력 6월 15일",
+                        description: "여름 더위를 이기는 날",
+                        foods: ["유두면", "수박", "오이", "참외", "복숭아", "포도"],
+                        activities: ["등고", "유두놀이", "물놀이", "수박놀이", "오이놀이"],
+                        meaning: "여름 더위를 이기고 건강을 기원하는 날",
+                        origin: "여름의 더위를 이기기 위한 풍습에서 시작",
+                        details: "시원한 과일과 물놀이로 여름 더위를 이기며 건강을 기원하는 날입니다."
+                    },
+                    "칠석": {
+                        date: "음력 7월 7일",
+                        description: "견우와 직녀가 만나는 날",
+                        foods: ["칠석과일", "밀국수", "과일", "달떡"],
+                        activities: ["칠석제", "별바라기", "바느질", "칠석놀이"],
+                        meaning: "견우직녀의 전설을 기리는 로맨틱한 날",
+                        origin: "중국 전설에서 유래된 견우와 직녀의 만남을 기리는 날",
+                        details: "견우와 직녀가 일 년에 한 번 만나는 날로, 별을 바라보며 소원을 빕니다."
+                    },
+                    "백중": {
+                        date: "음력 7월 15일",
+                        description: "부처님의 귀환을 기리는 날",
+                        foods: ["백중떡", "과일", "백중음식"],
+                        activities: ["백중제", "백중놀이", "백중굿"],
+                        meaning: "부처님의 귀환과 중원의 풍요를 기원하는 날",
+                        origin: "불교에서 유래된 풍습으로 중원의 풍요를 기원",
+                        details: "부처님이 지옥에서 돌아오는 날로, 중원의 풍요와 행복을 기원합니다."
+                    }
+                }
+            },
+            
+            // 가을편 세시풍속
+            autumn: {
+                name: "가을편",
+                festivals: {
+                    "추석": {
+                        date: "음력 8월 15일",
+                        description: "가을의 대표적인 명절, 한가위",
+                        foods: ["송편", "토란국", "나물", "과일", "한과", "약과"],
+                        activities: ["강강술래", "소놀이", "줄다리기", "성묘", "차례", "추석놀이"],
+                        meaning: "가을 수확을 감사하고 조상에게 감사하는 날",
+                        origin: "농경사회에서 추수를 감사하는 의미로 시작된 명절",
+                        details: "가을 수확의 기쁨을 조상과 나누고, 온 가족이 함께 모여 화합하는 명절입니다."
+                    },
+                    "중양절": {
+                        date: "음력 9월 9일",
+                        description: "국화를 감상하는 날",
+                        foods: ["국화전", "국화주", "국화차", "중양절음식"],
+                        activities: ["국화놀이", "산놀이", "등고", "국화구경"],
+                        meaning: "국화의 아름다움을 감상하고 건강을 기원하는 날",
+                        origin: "중국의 중양절에서 유래된 풍습으로 국화를 감상하는 날",
+                        details: "국화가 만발한 시기에 산에 올라 국화를 감상하며 건강과 장수를 기원합니다."
+                    },
+                    "상달고사": {
+                        date: "음력 10월",
+                        description: "가을 수확 후 고사를 지내는 시기",
+                        foods: ["고사음식", "새곡식", "수확음식"],
+                        activities: ["고사지내기", "수확감사", "고사놀이"],
+                        meaning: "가을 수확에 대한 감사와 내년 풍년 기원",
+                        origin: "농경사회에서 수확 후 토지신에게 감사하는 풍습",
+                        details: "가을 수확을 마친 후 토지신과 조상에게 감사하며 내년 풍년을 기원합니다."
+                    },
+                    "상달": {
+                        date: "음력 10월",
+                        description: "가을의 마지막 달",
+                        foods: ["상달음식", "김치", "장"],
+                        activities: ["김장", "장담그기", "겨울준비"],
+                        meaning: "겨울을 준비하고 한 해를 마무리하는 시기",
+                        origin: "농경사회에서 겨울 준비를 위한 풍습",
+                        details: "겨울을 대비해 김치를 담그고 장을 담그며 한 해를 마무리합니다."
+                    }
+                }
+            },
+            
+            // 겨울편 세시풍속
+            winter: {
+                name: "겨울편",
+                festivals: {
+                    "설날": {
+                        date: "음력 1월 1일",
+                        description: "새해의 첫날, 우리나라 최대 명절",
+                        foods: ["떡국", "전", "나물", "과일", "한과", "약과", "다식"],
+                        activities: ["세배", "차례", "윷놀이", "연날리기", "널뛰기", "설날놀이"],
+                        meaning: "새해의 시작과 가족의 화합을 다지는 날",
+                        origin: "농경사회에서 새해의 시작을 기념하는 의미로 시작",
+                        details: "새해의 첫날로 온 가족이 모여 화합하고 새해의 복을 기원하는 가장 중요한 명절입니다."
+                    },
+                    "동지": {
+                        date: "음력 11월 하순",
+                        description: "일년 중 밤이 가장 긴 날",
+                        foods: ["팥죽", "동지떡", "동지음식"],
+                        activities: ["팥죽먹기", "동지제", "동지놀이"],
+                        meaning: "긴 밤을 지내고 낮이 길어지는 것을 기념하는 날",
+                        origin: "24절기 중 하나로 일년 중 밤이 가장 긴 날",
+                        details: "일년 중 밤이 가장 긴 날로, 팥죽을 먹으며 액운을 쫓고 낮이 길어지는 것을 기념합니다."
+                    },
+                    "납월": {
+                        date: "음력 12월",
+                        description: "한 해를 마무리하는 달",
+                        foods: ["김치", "젓갈", "장", "납월음식"],
+                        activities: ["김장", "제수준비", "대청소", "겨울준비"],
+                        meaning: "겨울을 준비하고 새해를 맞이하는 준비의 시간",
+                        origin: "농경사회에서 겨울 준비와 새해 준비를 위한 풍습",
+                        details: "한 해를 마무리하고 새해를 준비하는 달로, 김장과 대청소로 새해를 맞이합니다."
+                    },
+                    "섣달그믐": {
+                        date: "음력 12월 마지막 날",
+                        description: "한 해의 마지막 날",
+                        foods: ["섣달음식", "제수", "한과"],
+                        activities: ["제수준비", "대청소", "새해준비"],
+                        meaning: "한 해를 마무리하고 새해를 준비하는 날",
+                        origin: "새해를 맞이하기 위한 준비의 의미",
+                        details: "한 해의 마지막 날로, 제수를 준비하고 집안을 깨끗이 하여 새해를 맞이합니다."
+                    }
+                }
+            },
+            
+            // 전통 놀이
+            games: {
+                "강강술래": {
+                    description: "추석 밤에 여성들이 손을 맞잡고 원을 그리며 노래하고 춤추는 전통 민속놀이",
+                    meaning: "농사의 풍년을 기원하고 공동체의 화합을 도모",
+                    status: "유네스코 인류무형문화유산",
+                    details: "여성들이 손을 맞잡고 원을 그리며 노래하고 춤추는 놀이로, 농사의 풍년을 기원합니다."
+                },
+                "윷놀이": {
+                    description: "윷을 던져서 나온 결과에 따라 말을 이동시키는 놀이",
+                    meaning: "가족 간의 화합과 재미를 위한 놀이",
+                    status: "설날 대표 놀이",
+                    details: "윷 네 개를 던져서 나온 결과에 따라 말을 이동시키는 놀이입니다."
+                },
+                "연날리기": {
+                    description: "연을 만들어 하늘에 띄우는 놀이",
+                    meaning: "나쁜 기운을 날려보내고 좋은 기운을 받는 의미",
+                    status: "설날과 단오의 전통 놀이",
+                    details: "종이로 만든 연을 하늘에 띄워 나쁜 기운을 날려보냅니다."
+                },
+                "그네뛰기": {
+                    description: "그네에 올라가서 앞뒤로 흔들리는 놀이",
+                    meaning: "여성들의 건강과 아름다움을 기원",
+                    status: "단오의 대표 놀이",
+                    details: "높은 나무에 그네를 매달고 앞뒤로 흔들리는 놀이입니다."
+                },
+                "씨름": {
+                    description: "두 사람이 서로 맞잡고 상대방을 넘어뜨리는 놀이",
+                    meaning: "남성들의 힘과 용맹함을 겨루는 놀이",
+                    status: "단오의 대표 놀이",
+                    details: "두 사람이 서로 맞잡고 상대방을 넘어뜨리는 힘겨루기 놀이입니다."
+                },
+                "널뛰기": {
+                    description: "널판을 밟아서 뛰는 놀이",
+                    meaning: "여성들의 건강과 키가 크기를 기원",
+                    status: "설날의 전통 놀이",
+                    details: "널판을 밟아서 뛰는 놀이로, 키가 크고 건강해지기를 기원합니다."
+                },
+                "제기차기": {
+                    description: "제기를 발로 차는 놀이",
+                    meaning: "재치와 민첩함을 기르는 놀이",
+                    status: "설날과 단오의 놀이",
+                    details: "제기를 발로 차서 떨어뜨리지 않도록 하는 놀이입니다."
+                },
+                "팽이치기": {
+                    description: "팽이를 회전시키는 놀이",
+                    meaning: "집중력과 인내심을 기르는 놀이",
+                    status: "겨울철 놀이",
+                    details: "팽이를 회전시켜 오래 돌리는 놀이입니다."
+                },
+                "활쏘기": {
+                    description: "활로 과녁을 쏘는 놀이",
+                    meaning: "집중력과 정확성을 기르는 놀이",
+                    status: "단오의 놀이",
+                    details: "활로 과녁을 정확히 쏘는 놀이입니다."
+                },
+                "줄다리기": {
+                    description: "두 팀이 줄을 당겨 승부를 겨루는 놀이",
+                    meaning: "팀워크와 협동심을 기르는 놀이",
+                    status: "정월대보름과 추석의 놀이",
+                    details: "두 팀이 긴 줄을 당겨 승부를 겨루는 놀이입니다."
+                }
+            },
+            
+            // 전통 음식
+            foods: {
+                "떡국": {
+                    description: "설날에 먹는 전통 음식",
+                    meaning: "흰 떡국은 곡식의 정수로 풍년과 건강을 기원하며, 긴 떡국은 장수를 상징",
+                    ingredients: ["떡", "국물", "고명", "소고기", "파"],
+                    details: "설날 아침에 먹는 대표 음식으로, 한 살 더 먹는다는 의미가 있습니다."
+                },
+                "송편": {
+                    description: "추석에 빚는 전통 떡",
+                    meaning: "보름달을 닮은 모양으로 풍요와 단결을 상징",
+                    ingredients: ["쌀가루", "팥", "참깨", "콩", "소금"],
+                    details: "반달 모양으로 빚어 만든 떡으로, 추석의 대표 음식입니다."
+                },
+                "수리취떡": {
+                    description: "단오에 먹는 떡",
+                    meaning: "수리취의 독특한 향으로 악귀를 쫓는 의미",
+                    ingredients: ["수리취", "쌀가루", "팥", "소금"],
+                    details: "수리취 잎을 넣어 만든 떡으로, 단오의 대표 음식입니다."
+                },
+                "팥죽": {
+                    description: "동지에 먹는 전통 음식",
+                    meaning: "팥의 빨간색이 악귀를 쫓는다고 믿어 동지에 먹음",
+                    ingredients: ["팥", "쌀", "소금", "팥알"],
+                    details: "동지날에 먹는 대표 음식으로, 액운을 쫓는다고 믿습니다."
+                },
+                "오곡밥": {
+                    description: "정월대보름에 먹는 밥",
+                    meaning: "다섯 가지 곡식으로 풍년을 기원",
+                    ingredients: ["쌀", "보리", "콩", "팥", "수수"],
+                    details: "다섯 가지 곡식을 섞어 지은 밥으로, 정월대보름의 대표 음식입니다."
+                },
+                "부럼": {
+                    description: "정월대보름에 먹는 견과류",
+                    meaning: "부스럼이 생기지 않도록 기원하는 의미",
+                    ingredients: ["호두", "땅콩", "밤", "잣"],
+                    details: "정월대보름 아침에 먹는 견과류로, 부스럼을 예방한다고 믿습니다."
+                },
+                "귀밝이술": {
+                    description: "정월대보름에 마시는 술",
+                    meaning: "한 해 동안 귀가 밝아지도록 기원",
+                    ingredients: ["청주", "찹쌀", "누룩"],
+                    details: "정월대보름에 마시는 술로, 귀가 밝아지기를 기원합니다."
+                },
+                "화전": {
+                    description: "삼짇날에 먹는 떡",
+                    meaning: "봄꽃의 아름다움을 음식으로 즐기는 의미",
+                    ingredients: ["쌀가루", "진달래", "복숭아꽃", "소금"],
+                    details: "봄꽃을 넣어 만든 떡으로, 삼짇날의 대표 음식입니다."
+                },
+                "국화전": {
+                    description: "중양절에 먹는 전",
+                    meaning: "국화의 아름다움과 건강을 기원",
+                    ingredients: ["국화", "밀가루", "달걀", "소금"],
+                    details: "국화를 넣어 만든 전으로, 중양절의 대표 음식입니다."
+                },
+                "한과": {
+                    description: "전통 과자",
+                    meaning: "달콤함으로 행복을 상징",
+                    ingredients: ["밀가루", "꿀", "참기름", "계피"],
+                    details: "전통적인 한국 과자로, 명절과 제사에 사용됩니다."
+                },
+                "약과": {
+                    description: "기름에 튀긴 전통 과자",
+                    meaning: "달콤함과 바삭함으로 기쁨을 상징",
+                    ingredients: ["밀가루", "꿀", "기름", "계피"],
+                    details: "기름에 튀겨 만든 전통 과자로, 명절에 즐겨 먹습니다."
+                }
+            },
+            
+            // 사진 자료 정보
+            photoMaterials: {
+                "달집태우기": {
+                    description: "정월대보름 달집태우기 사진",
+                    keywords: ["달집", "불꽃", "정월대보름", "전통행사", "시민참여"],
+                    searchTerms: "달집태우기 정월대보름 전통행사",
+                    visualElements: ["거대한 달집", "화려한 불꽃", "참여하는 시민들", "밤하늘", "축제 분위기"],
+                    location: "청도읍성, 전국 각지",
+                    season: "정월대보름"
+                },
+                "윷놀이": {
+                    description: "가족이 함께 윷놀이를 하는 사진",
+                    keywords: ["윷놀이", "가족", "설날", "전통놀이", "화목"],
+                    searchTerms: "윷놀이 설날 가족 전통놀이",
+                    visualElements: ["윷판", "윷", "말", "웃는 가족들", "한복"],
+                    location: "집안, 마당",
+                    season: "설날"
+                },
+                "강강술래": {
+                    description: "추석 밤 강강술래를 추는 사진",
+                    keywords: ["강강술래", "추석", "여성들", "원형춤", "유네스코"],
+                    searchTerms: "강강술래 추석 원형춤 여성들",
+                    visualElements: ["손잡은 여성들", "원형 형태", "한복", "보름달", "어둠"],
+                    location: "마당, 넓은 공터",
+                    season: "추석"
+                },
+                "그네뛰기": {
+                    description: "단오날 그네뛰기를 하는 사진",
+                    keywords: ["그네뛰기", "단오", "여성", "놀이", "하늘"],
+                    searchTerms: "그네뛰기 단오 여성 놀이",
+                    visualElements: ["높은 그네", "한복 입은 여성", "나무", "하늘", "바람"],
+                    location: "높은 나무가 있는 마당",
+                    season: "단오"
+                },
+                "송편빚기": {
+                    description: "추석에 송편을 빚는 사진",
+                    keywords: ["송편", "추석", "가족", "빚기", "전통음식"],
+                    searchTerms: "송편 빚기 추석 가족 전통음식",
+                    visualElements: ["송편", "쌀가루", "팥", "가족들", "반죽하는 손"],
+                    location: "집안, 부엌",
+                    season: "추석"
+                },
+                "떡국먹기": {
+                    description: "설날 아침 떡국을 먹는 사진",
+                    keywords: ["떡국", "설날", "아침", "가족", "전통음식"],
+                    searchTerms: "떡국 설날 아침 가족 식사",
+                    visualElements: ["떡국", "상", "한복 입은 가족들", "웃음", "따뜻한 분위기"],
+                    location: "집안, 상",
+                    season: "설날"
+                },
+                "연날리기": {
+                    description: "설날에 연을 날리는 사진",
+                    keywords: ["연날리기", "설날", "아이들", "하늘", "바람"],
+                    searchTerms: "연날리기 설날 아이들 하늘",
+                    visualElements: ["하늘을 나는 연", "아이들", "실", "바람", "밝은 하늘"],
+                    location: "마당, 넓은 공터",
+                    season: "설날"
+                },
+                "씨름": {
+                    description: "단오날 씨름을 하는 사진",
+                    keywords: ["씨름", "단오", "남성", "힘겨루기", "전통놀이"],
+                    searchTerms: "씨름 단오 남성 힘겨루기",
+                    visualElements: ["씨름하는 남성들", "모래판", "관중들", "흥미진진한 장면"],
+                    location: "마당, 씨름판",
+                    season: "단오"
+                },
+                "지신밟기": {
+                    description: "정월대보름 지신밟기를 하는 사진",
+                    keywords: ["지신밟기", "정월대보름", "집안", "액운", "전통풍습"],
+                    searchTerms: "지신밟기 정월대보름 집안 액운",
+                    visualElements: ["집안을 도는 사람들", "전통의상", "집 구조", "축복의 의미"],
+                    location: "집안, 마당",
+                    season: "정월대보름"
+                },
+                "오곡밥": {
+                    description: "정월대보름 오곡밥을 먹는 사진",
+                    keywords: ["오곡밥", "정월대보름", "다섯곡식", "건강", "전통음식"],
+                    searchTerms: "오곡밥 정월대보름 다섯곡식 건강",
+                    visualElements: ["다섯 가지 곡식", "밥그릇", "가족", "건강한 식사"],
+                    location: "집안, 식탁",
+                    season: "정월대보름"
+                },
+                "부럼": {
+                    description: "정월대보름 부럼을 먹는 사진",
+                    keywords: ["부럼", "정월대보름", "견과류", "건강", "전통음식"],
+                    searchTerms: "부럼 정월대보름 견과류 건강",
+                    visualElements: ["호두", "땅콩", "밤", "잣", "가족"],
+                    location: "집안, 식탁",
+                    season: "정월대보름"
+                },
+                "귀밝이술": {
+                    description: "정월대보름 귀밝이술을 마시는 사진",
+                    keywords: ["귀밝이술", "정월대보름", "전통술", "건강", "전통음식"],
+                    searchTerms: "귀밝이술 정월대보름 전통술",
+                    visualElements: ["술잔", "전통술", "가족", "건강한 마시기"],
+                    location: "집안, 상",
+                    season: "정월대보름"
+                },
+                "화전": {
+                    description: "삼짇날 화전을 만드는 사진",
+                    keywords: ["화전", "삼짇날", "봄꽃", "전통음식", "봄"],
+                    searchTerms: "화전 삼짇날 봄꽃 전통음식",
+                    visualElements: ["봄꽃", "쌀가루", "팬", "따뜻한 분위기"],
+                    location: "부엌, 마당",
+                    season: "삼짇날"
+                },
+                "수리취떡": {
+                    description: "단오 수리취떡을 만드는 사진",
+                    keywords: ["수리취떡", "단오", "전통떡", "수리취", "여름"],
+                    searchTerms: "수리취떡 단오 전통떡 수리취",
+                    visualElements: ["수리취", "떡", "쌀가루", "여름 음식"],
+                    location: "부엌",
+                    season: "단오"
+                },
+                "팥죽": {
+                    description: "동지 팥죽을 먹는 사진",
+                    keywords: ["팥죽", "동지", "전통음식", "겨울", "건강"],
+                    searchTerms: "팥죽 동지 전통음식 겨울",
+                    visualElements: ["팥", "죽", "그릇", "따뜻한 분위기"],
+                    location: "집안, 상",
+                    season: "동지"
+                },
+                "한과": {
+                    description: "전통 한과를 만드는 사진",
+                    keywords: ["한과", "전통과자", "달콤함", "명절", "전통음식"],
+                    searchTerms: "한과 전통과자 명절 전통음식",
+                    visualElements: ["한과", "밀가루", "꿀", "달콤한 과자"],
+                    location: "부엌",
+                    season: "명절"
+                },
+                "약과": {
+                    description: "전통 약과를 만드는 사진",
+                    keywords: ["약과", "전통과자", "튀김", "명절", "달콤함"],
+                    searchTerms: "약과 전통과자 튀김 명절",
+                    visualElements: ["약과", "기름", "튀김", "달콤한 과자"],
+                    location: "부엌",
+                    season: "명절"
+                },
+                "한복": {
+                    description: "전통 한복을 입은 모습의 사진",
+                    keywords: ["한복", "전통의상", "명절", "예쁜", "전통"],
+                    searchTerms: "한복 전통의상 명절",
+                    visualElements: ["한복", "전통의상", "아름다운 색상", "전통적 미"],
+                    location: "명절 행사장, 집",
+                    season: "명절"
+                },
+                "제기차기": {
+                    description: "제기차기를 하는 사진",
+                    keywords: ["제기차기", "전통놀이", "아이들", "재치", "민첩함"],
+                    searchTerms: "제기차기 전통놀이 아이들",
+                    visualElements: ["제기", "발", "아이들", "재치있는 모습"],
+                    location: "마당, 공터",
+                    season: "설날, 단오"
+                },
+                "팽이치기": {
+                    description: "팽이치기를 하는 사진",
+                    keywords: ["팽이치기", "팽이", "전통놀이", "집중력", "겨울"],
+                    searchTerms: "팽이치기 팽이 전통놀이",
+                    visualElements: ["팽이", "실", "회전", "아이들"],
+                    location: "마당, 공터",
+                    season: "겨울"
+                },
+                "널뛰기": {
+                    description: "널뛰기를 하는 사진",
+                    keywords: ["널뛰기", "전통놀이", "여성", "설날", "키크기"],
+                    searchTerms: "널뛰기 전통놀이 여성 설날",
+                    visualElements: ["널판", "여성", "뛰는 모습", "높이"],
+                    location: "마당",
+                    season: "설날"
+                },
+                "국화전": {
+                    description: "중양절 국화전을 만드는 사진",
+                    keywords: ["국화전", "중양절", "국화", "전", "가을"],
+                    searchTerms: "국화전 중양절 국화 전",
+                    visualElements: ["국화", "전", "가을", "아름다운 색상"],
+                    location: "부엌",
+                    season: "중양절"
+                },
+                "칠석과일": {
+                    description: "칠석날 과일을 준비하는 사진",
+                    keywords: ["칠석과일", "칠석", "과일", "견우직녀", "여름"],
+                    searchTerms: "칠석과일 칠석 과일 견우직녀",
+                    visualElements: ["과일", "여름과일", "아름다운 배치", "칠석"],
+                    location: "집안, 상",
+                    season: "칠석"
+                },
+                "백중떡": {
+                    description: "백중떡을 만드는 사진",
+                    keywords: ["백중떡", "백중", "떡", "여름", "전통음식"],
+                    searchTerms: "백중떡 백중 떡 여름",
+                    visualElements: ["백중떡", "떡", "여름 음식", "전통"],
+                    location: "부엌",
+                    season: "백중"
+                },
+                "상달고사": {
+                    description: "상달고사를 지내는 사진",
+                    keywords: ["상달고사", "고사", "가을", "수확", "감사"],
+                    searchTerms: "상달고사 고사 가을 수확",
+                    visualElements: ["고사상", "곡식", "감사", "가을"],
+                    location: "마당, 집",
+                    season: "상달"
+                },
+                "김장": {
+                    description: "김장을 하는 사진",
+                    keywords: ["김장", "김치", "겨울준비", "가족", "전통"],
+                    searchTerms: "김장 김치 겨울준비 가족",
+                    visualElements: ["배추", "김치", "가족", "겨울준비"],
+                    location: "마당, 부엌",
+                    season: "상달"
+                },
+                "차례": {
+                    description: "차례를 지내는 사진",
+                    keywords: ["차례", "제사", "조상", "명절", "전통"],
+                    searchTerms: "차례 제사 조상 명절",
+                    visualElements: ["차례상", "음식", "가족", "정성"],
+                    location: "집안",
+                    season: "명절"
+                },
+                "성묘": {
+                    description: "성묘를 하는 사진",
+                    keywords: ["성묘", "묘지", "조상", "한식", "추모"],
+                    searchTerms: "성묘 묘지 조상 한식",
+                    visualElements: ["묘지", "꽃", "조상", "추모"],
+                    location: "묘지",
+                    season: "한식, 추석"
+                },
+                "청명놀이": {
+                    description: "청명날 봄놀이를 하는 사진",
+                    keywords: ["청명놀이", "청명", "봄놀이", "꽃구경", "봄"],
+                    searchTerms: "청명놀이 청명 봄놀이 꽃구경",
+                    visualElements: ["꽃", "봄나들이", "가족", "자연"],
+                    location: "산, 공원",
+                    season: "청명"
+                },
+                "유두목욕": {
+                    description: "유두날 목욕을 하는 사진",
+                    keywords: ["유두목욕", "유두", "목욕", "여름", "깨끗함"],
+                    searchTerms: "유두목욕 유두 목욕 여름",
+                    visualElements: ["물", "목욕", "여름", "깨끗함"],
+                    location: "강, 바다",
+                    season: "유두"
+                },
+                "칠석기원": {
+                    description: "칠석날 기원을 하는 사진",
+                    keywords: ["칠석기원", "칠석", "기원", "견우직녀", "사랑"],
+                    searchTerms: "칠석기원 칠석 기원 견우직녀",
+                    visualElements: ["기원", "별", "사랑", "칠석"],
+                    location: "마당, 하늘",
+                    season: "칠석"
+                },
+                "백중공양": {
+                    description: "백중 공양을 하는 사진",
+                    keywords: ["백중공양", "백중", "공양", "부모", "효도"],
+                    searchTerms: "백중공양 백중 공양 부모 효도",
+                    visualElements: ["공양", "부모", "효도", "감사"],
+                    location: "사찰, 집",
+                    season: "백중"
+                },
+                "중양절놀이": {
+                    description: "중양절 놀이를 하는 사진",
+                    keywords: ["중양절놀이", "중양절", "놀이", "가을", "등산"],
+                    searchTerms: "중양절놀이 중양절 놀이 가을 등산",
+                    visualElements: ["등산", "가을", "놀이", "자연"],
+                    location: "산, 공원",
+                    season: "중양절"
+                },
+                "상달김장": {
+                    description: "상달 김장을 하는 사진",
+                    keywords: ["상달김장", "김장", "겨울준비", "가족", "전통"],
+                    searchTerms: "상달김장 김장 겨울준비 가족",
+                    visualElements: ["배추", "김치", "가족", "겨울준비"],
+                    location: "마당, 부엌",
+                    season: "상달"
+                },
+                "납월제사": {
+                    description: "납월 제사를 지내는 사진",
+                    keywords: ["납월제사", "납월", "제사", "조상", "겨울"],
+                    searchTerms: "납월제사 납월 제사 조상 겨울",
+                    visualElements: ["제사", "조상", "겨울", "정성"],
+                    location: "집안",
+                    season: "납월"
+                },
+                "섣달그믐": {
+                    description: "섣달그믐 풍습 사진",
+                    keywords: ["섣달그믐", "섣달", "그믐", "설날준비", "전통"],
+                    searchTerms: "섣달그믐 섣달 그믐 설날준비",
+                    visualElements: ["설날준비", "전통", "겨울", "새해"],
+                    location: "집안",
+                    season: "섣달그믐"
+                }
+            },
+            
+            // 시각적 자료 및 그림 정보
+            visualMaterials: {
+                "달집태우기": {
+                    description: "정월대보름에 달집을 태우는 모습",
+                    elements: ["솔가지", "볏단", "불꽃", "달집", "시민들"],
+                    colors: ["빨강", "주황", "노랑", "검정", "갈색"],
+                    mood: "따뜻하고 화사한 분위기"
+                },
+                "정월대보름": {
+                    description: "정월대보름 풍경",
+                    elements: ["보름달", "달집", "부럼", "오곡밥", "지신밟기"],
+                    colors: ["흰색", "노랑", "주황", "갈색"],
+                    mood: "평화롭고 축복받는 분위기"
+                },
+                "윷놀이": {
+                    description: "가족이 함께 윷놀이를 하는 모습",
+                    elements: ["윷", "윷판", "말", "가족들", "웃음"],
+                    colors: ["빨강", "파랑", "노랑", "초록", "흰색"],
+                    mood: "즐겁고 화목한 분위기"
+                },
+                "강강술래": {
+                    description: "추석 밤 강강술래를 추는 모습",
+                    elements: ["여성들", "원형", "손잡기", "춤", "노래"],
+                    colors: ["한복의 화려한 색상", "보름달", "어둠"],
+                    mood: "아름답고 신비로운 분위기"
+                },
+                "그네뛰기": {
+                    description: "단오날 그네뛰기를 하는 모습",
+                    elements: ["그네", "여성", "나무", "하늘", "바람"],
+                    colors: ["한복의 화려한 색상", "초록", "파랑", "흰색"],
+                    mood: "신나고 자유로운 분위기"
+                },
+                "송편빚기": {
+                    description: "추석에 송편을 빚는 모습",
+                    elements: ["송편", "쌀가루", "팥", "가족들", "반죽"],
+                    colors: ["흰색", "빨강", "갈색", "초록"],
+                    mood: "따뜻하고 정성스러운 분위기"
+                },
+                "떡국먹기": {
+                    description: "설날 아침 떡국을 먹는 모습",
+                    elements: ["떡국", "가족들", "상", "한복", "웃음"],
+                    colors: ["흰색", "빨강", "노랑", "갈색"],
+                    mood: "따뜻하고 축복받는 분위기"
+                },
+                "연날리기": {
+                    description: "설날에 연을 날리는 모습",
+                    elements: ["연", "하늘", "아이들", "바람", "실"],
+                    colors: ["화려한 연의 색상", "파랑", "흰색"],
+                    mood: "즐겁고 희망적인 분위기"
+                }
+            }
+        };
+
+        // 한국어 조사 처리 함수
+        function getKoreanParticle(word) {
+            const lastChar = word.charCodeAt(word.length - 1);
+            const lastCharIndex = lastChar - 0xAC00;
+            const lastConsonant = lastCharIndex % 28;
+            return lastConsonant === 0 ? "는" : "은";
+        }
+
+        // 사진 검색 함수
+        function searchPhoto(keyword) {
+            const photo = sesiData.photoMaterials[keyword];
+            if (photo) {
+                return {
+                    description: photo.description,
+                    keywords: photo.keywords,
+                    searchTerms: photo.searchTerms,
+                    visualElements: photo.visualElements,
+                    location: photo.location,
+                    season: photo.season
+                };
+            }
+            return null;
+        }
+
+        // 이미지 검색 링크 생성 함수
+        function generateImageSearchLink(searchTerms) {
+            const encodedTerms = encodeURIComponent(searchTerms);
+            return `https://www.google.com/search?q=${encodedTerms}&tbm=isch`;
+        }
+
+        // 네이버 이미지 검색 링크 생성 함수
+        function generateNaverImageSearchLink(searchTerms) {
+            const encodedTerms = encodeURIComponent(searchTerms);
+            return `https://search.naver.com/search.naver?where=image&sm=tab_jum&query=${encodedTerms}`;
+        }
+
+        // 실시간 검색 함수 (학습되지 않은 내용용)
+        function generateRealTimeSearchLinks(keyword) {
+            const encodedKeyword = encodeURIComponent(keyword);
+            return {
+                google: `https://goo.gl/search?q=${encodedKeyword}`,
+                naver: `https://search.naver.com/search.naver?query=${encodedKeyword}`,
+                naverImage: `https://search.naver.com/search.naver?where=image&query=${encodedKeyword}`,
+                naverDict: `https://dict.naver.com/search.dict?dicQuery=${encodedKeyword}`
+            };
+        }
+
+        // 전통 풍습 설명 함수
+        function getTraditionalCustomExplanation(customName) {
+            const customs = {
+                "지신밟기": "집 안팎을 돌면서 지신(집신)을 밟아 액운을 쫓는 풍습으로, 정월대보름에 행해집니다.",
+                "귀밝이술": "정월대보름에 마시는 술로, 한 해 동안 귀가 밝아지도록 기원하는 의미입니다.",
+                "창포주": "단오에 창포를 넣어 담근 술로, 머리를 맑게 하고 건강을 기원합니다.",
+                "강강술래": "추석 밤에 여성들이 손을 맞잡고 원을 그리며 노래하고 춤추는 전통 민속놀이입니다.",
+                "수리취떡": "단오에 먹는 떡으로, 수리취의 독특한 향으로 악귀를 쫓는다고 믿습니다.",
+                "오색나물": "정월대보름에 먹는 다섯 가지 색깔의 나물로, 건강과 풍년을 기원합니다.",
+                "송편": "추석에 빚는 전통 떡으로, 보름달을 닮은 모양으로 풍요와 단결을 상징합니다.",
+                "팥죽": "동지에 먹는 전통 음식으로, 팥의 빨간색이 악귀를 쫓는다고 믿습니다.",
+                "부럼": "정월대보름에 먹는 견과류로, 부스럼이 생기지 않도록 기원합니다.",
+                "오곡밥": "정월대보름에 먹는 다섯 가지 곡식으로 지은 밥으로, 풍년을 기원합니다.",
+                "창포물": "단오에 창포로 머리를 감는 풍습으로, 머리를 맑게 하고 건강을 기원합니다.",
+                "달맞이": "정월대보름에 보름달을 보며 소원을 빌거나 풍년을 기원하는 풍습입니다.",
+                "성묘": "조상의 묘에 찾아가 인사하고 차례를 지내는 풍습입니다.",
+                "차례": "조상에게 제사를 지내는 전통 의식입니다.",
+                "세배": "설날에 어른들에게 인사하는 예의입니다.",
+                "윷놀이": "윷을 던져서 말을 이동시키는 전통 놀이입니다.",
+                "연날리기": "연을 만들어 하늘에 띄우는 놀이로, 나쁜 기운을 날려보냅니다.",
+                "널뛰기": "널판을 밟아서 뛰는 놀이로, 설날에 즐기는 전통 놀이입니다.",
+                "제기차기": "제기를 발로 차는 놀이입니다.",
+                "팽이치기": "팽이를 회전시키는 놀이입니다.",
+                "그네뛰기": "그네에 올라가서 앞뒤로 흔들리는 놀이로, 단오의 대표 놀이입니다.",
+                "씨름": "두 사람이 서로 맞잡고 상대방을 넘어뜨리는 놀이입니다.",
+                "활쏘기": "활로 과녁을 쏘는 놀이입니다.",
+                "화전놀이": "삼짇날에 화전을 만들어 즐기는 놀이입니다.",
+                "국화전": "중양절에 국화를 넣어 만든 전입니다.",
+                "국화주": "중양절에 국화를 넣어 담근 술입니다.",
+                "등고": "산에 올라가서 경치를 감상하는 풍습입니다.",
+                "유두놀이": "유두날에 하는 물놀이입니다.",
+                "견우직녀": "칠석의 전설에 나오는 남녀 주인공입니다.",
+                "칠석제": "칠석에 견우와 직녀를 기리는 제사입니다.",
+                "백중제": "백중에 지내는 제사입니다.",
+                "상달고사": "가을 수확 후 지내는 고사입니다.",
+                "복조리": "정월대보름에 만드는 대나무로 엮은 조롱박 모양의 용기로, 복을 담는다는 의미가 있습니다."
+            };
+            
+            return customs[customName] || null;
+        }
+
+        // 답변 생성 함수 (포괄적인 버전)
+        function findAnswer(question) {
+            const lowerQuestion = question.toLowerCase();
+            
+            // 일반적인 질문 패턴 감지
+            const questionPatterns = {
+                yesNo: /(하나요|인가요|되나요|맞나요|있나요|없나요|하나|인가|되나|맞나|있나|없나)\?*$/,
+                what: /(뭐야|뭔가|무엇인가|뭐예요|뭡니까)/,
+                why: /(왜|어째서|무슨 이유로|어떻게)/,
+                how: /(어떻게|어떤|어떠한|어떤 방식으로)/,
+                when: /(언제|몇 월|몇 일|어느 시기에)/,
+                where: /(어디서|어느 곳에서|어디에)/,
+                who: /(누가|누구가|누구에게서)/
+            };
+            
+            // 질문 유형 분석
+            function analyzeQuestionType(question) {
+                const patterns = [];
+                for (const [type, pattern] of Object.entries(questionPatterns)) {
+                    if (pattern.test(question)) {
+                        patterns.push(type);
+                    }
+                }
+                return patterns;
+            }
+            
+            const questionTypes = analyzeQuestionType(lowerQuestion);
+            
+            // 세시풍속 기본 개념 질문 (최우선 처리)
+            if (lowerQuestion.includes('세시풍속') && (lowerQuestion.includes('뭐') || lowerQuestion.includes('무엇') || lowerQuestion.includes('의미') || lowerQuestion.includes('뜻'))) {
+                return '세시풍속은 계절에 따라 하는 전통 풍습이에요. 설날, 추석 같은 명절에 먹는 음식, 하는 놀이, 지키는 풍습들을 말해요. 우리 조상들이 자연과 함께 살면서 만들어낸 문화예요.';
+            }
+            
+            // 전통문화 기본 개념 질문
+            if (lowerQuestion.includes('전통문화') && (lowerQuestion.includes('뭐') || lowerQuestion.includes('무엇') || lowerQuestion.includes('의미') || lowerQuestion.includes('뜻'))) {
+                return '전통문화는 우리 조상들이 오래전부터 해온 문화예요. 세시풍속, 한복, 한옥, 전통 음식과 놀이들이 포함돼요. 우리만의 특별한 문화라서 소중히 지켜야 해요.';
+            }
+            
+            // 명절 기본 개념 질문
+            if (lowerQuestion.includes('명절') && (lowerQuestion.includes('뭐') || lowerQuestion.includes('무엇') || lowerQuestion.includes('의미') || lowerQuestion.includes('뜻'))) {
+                return '명절은 특별한 날이에요. 설날, 정월대보름, 단오, 추석, 동지 등이 있어요. 가족이 모여서 조상님께 감사하고, 맛있는 음식을 먹고, 재미있는 놀이를 해요.';
+            }
+            
+            // 절기 기본 개념 질문
+            if (lowerQuestion.includes('절기') && (lowerQuestion.includes('뭐') || lowerQuestion.includes('무엇') || lowerQuestion.includes('의미') || lowerQuestion.includes('뜻'))) {
+                return '절기는 계절을 나누는 기준이에요. 봄, 여름, 가을, 겨울을 더 세분화한 거예요. 조상들이 농사짓기에 좋은 때를 알기 위해 만들었어요.';
+            }
+            
+            // 복조리 관련 문맥 분석 (우선순위 높임)
+            if (lowerQuestion.includes('복조리')) {
+                // 설날 관련 문맥 체크
+                if (lowerQuestion.includes('설날') || lowerQuestion.includes('설') || lowerQuestion.includes('신정')) {
+                    const searchLinks = generateRealTimeSearchLinks(question);
+                    return `죄송합니다. "설날에도 복조리를 만드나요?"에 대한 정보는 아직 학습되지 않았습니다.\n\n🔍 실시간 검색을 통해 찾아보세요:\n\n📱 구글: ${searchLinks.google}\n🇰🇷 네이버: ${searchLinks.naver}\n📷 네이버 이미지: ${searchLinks.naverImage}\n\n💡 추천 검색어: "설날 복조리", "설날 전통 용기", "설날 복조리 만들기"\n\n📝 알고 있는 정보: 복조리는 일반적으로 정월대보름에 만드는 전통 용기입니다.`;
+                }
+                
+                // 정월대보름 관련 문맥이거나 일반적인 복조리 질문
+                if (lowerQuestion.includes('정월대보름') || lowerQuestion.includes('대보름') || lowerQuestion.includes('보름')) {
+                    return getTraditionalCustomExplanation('복조리');
+                }
+                
+                // 복조리 일반 질문
+                return getTraditionalCustomExplanation('복조리');
+            }
+
+            // 전통 놀이 "왜 하는지" 질문 처리
+            if (lowerQuestion.includes('왜') && (lowerQuestion.includes('해') || lowerQuestion.includes('하') || lowerQuestion.includes('놀이'))) {
+                if (lowerQuestion.includes('윷놀이')) {
+                    return `🎲 윷놀이를 왜 하는가?
+
+👨‍👩‍👧‍👦 가족의 화합:
+• 온 가족이 함께 모여 즐기는 대표적인 명절 놀이
+• 세대를 넘나들며 모두가 참여할 수 있는 민주적 놀이
+• 가족 간의 소통과 유대감을 강화하는 소중한 시간
+
+🎯 전략과 운:
+• 윷의 결과를 예측하고 말을 이동시키는 전략적 사고력 개발
+• 운과 실력이 결합된 놀이로 인생의 불확실성을 체험
+• 승부에 대한 긍정적 자세와 포용력을 기르는 교육적 가치
+
+🏛️ 전통 문화 전승:
+• 조상들로부터 전해 내려온 우리 민족의 고유 놀이
+• 전통 문화의 아름다움과 깊이를 체험하는 시간
+• 후손들에게 문화적 정체성을 전달하는 매개체
+
+🎮 재미와 흥미:
+• 간단한 규칙으로 누구나 쉽게 즐길 수 있는 놀이
+• 예측 불가능한 결과로 인한 흥미진진한 재미
+• 명절의 분위기를 한층 더 즐겁게 만드는 요소
+
+🧠 교육적 효과:
+• 집중력과 판단력을 기르는 두뇌 활동
+• 승패를 받아들이는 스포츠맨십과 인내심 개발
+• 전략적 사고와 계산 능력을 자연스럽게 익히는 학습`;
+                }
+                if (lowerQuestion.includes('연날리기')) {
+                    return `🪁 연날리기를 왜 하는가?
+
+🌪️ 나쁜 기운 제거:
+• 연을 높이 날려 나쁜 기운을 하늘로 보내는 의미
+• 새해의 액운과 불운을 날려보내고 좋은 기운을 받아들이려 함
+• 자연의 바람과 함께 마음의 정화를 추구하는 의식
+
+🎯 집중력과 인내심:
+• 연을 안정적으로 띄우기 위한 집중력과 끈기 개발
+• 바람의 방향과 세기를 파악하는 자연 관찰력 향상
+• 실패를 반복하며 성공을 이루는 인내심과 끈기 기르기
+
+🏃‍♂️ 신체 활동:
+• 넓은 공터에서 뛰어다니며 하는 건강한 운동
+• 바람과 함께 뛰는 자연스러운 체력 단련
+• 실외 활동을 통한 신선한 공기 마시기와 햇빛 쬐기
+
+👥 사회성 개발:
+• 다른 아이들과 함께 연을 날리며 협동심 기르기
+• 연 실이 꼬이거나 문제가 생겼을 때 서로 도와주는 상호부조
+• 연날리기 대회를 통해 경쟁심과 우정을 동시에 배움
+
+🏛️ 전통 문화 체험:
+• 조상들이 즐겨 했던 전통 놀이의 재미와 의미 체험
+• 우리 민족의 자연 사랑과 창의성을 느끼는 시간
+• 전통 문화의 아름다움을 몸으로 직접 체험하는 교육
+
+🎨 창의성 발휘:
+• 자신만의 연을 만들고 꾸미는 창의적 활동
+• 연의 모양, 색깔, 그림을 통해 예술적 감성 발달
+• 개성 있는 연을 만들어 띄우는 성취감과 자부심 획득`;
+                }
+                if (lowerQuestion.includes('그네뛰기')) {
+                    return `🎪 그네뛰기를 왜 하는가?
+
+🌬️ 하늘과의 교감:
+• 높이 올라가 하늘과 가까워지는 신비로운 경험
+• 바람을 느끼며 자연과 하나 되는 자유로운 감정
+• 높은 곳에서 내려다보는 새로운 시각과 상상력 발휘
+
+🏥 건강과 체력:
+• 전신 근육을 사용하는 균형 잡힌 운동
+• 유연성과 균형감각을 기르는 자연스러운 체력 단련
+• 심폐 기능 향상과 스트레스 해소에 도움
+
+🌸 여성의 아름다움:
+• 전통적으로 여성들이 즐겨 했던 우아한 놀이
+• 그네를 타며 보여주는 여성의 우아함과 아름다움
+• 단오의 대표 놀이로 여성의 건강과 아름다움을 기원
+
+🎭 표현과 해방:
+• 일상의 구속에서 벗어나 자유로운 표현을 즐기는 시간
+• 그네를 타며 노래를 부르거나 즐거워하는 감정 표현
+• 사회적 억압에서 벗어난 자유로운 여성 문화의 상징
+
+👥 사회적 교류:
+• 마을의 젊은 남녀들이 함께 모여 즐기는 소통의 장
+• 그네를 보러 온 사람들과의 자연스러운 만남과 교류
+• 지역 공동체의 화합과 유대감을 강화하는 역할
+
+🏛️ 전통 문화 계승:
+• 조상들로부터 전해 내려온 아름다운 전통 놀이
+• 우리 민족의 우아한 문화와 예술성을 체험하는 시간
+• 전통 문화의 가치와 아름다움을 후손에게 전달`;
+                }
+                if (lowerQuestion.includes('씨름')) {
+                    return `🤼 씨름을 왜 하는가?
+
+💪 힘과 용맹함:
+• 남성들의 힘과 용맹함을 겨루는 전통적인 스포츠
+• 정신력과 체력을 동시에 기르는 종합적인 운동
+• 진정한 남성다움과 강인함을 추구하는 의미
+
+🏆 명예와 승부:
+• 마을의 대표 선수로 나서 마을의 명예를 걸고 겨루는 경기
+• 개인의 실력뿐만 아니라 마을의 단합과 화합을 상징
+• 승부를 통해 얻는 명예와 자부심, 그리고 패배를 통한 겸손함
+
+👥 공동체 화합:
+• 마을 사람들이 함께 모여 응원하며 즐기는 축제
+• 씨름을 통해 마을의 단결과 화합을 다지는 시간
+• 세대를 넘나들며 모두가 함께 즐기는 공동체 놀이
+
+🏛️ 전통 문화 전승:
+• 우리 민족 고유의 전통 스포츠로 문화적 가치가 높음
+• 조상들의 강인한 정신력과 체력을 체험하는 시간
+• 전통 문화의 우수성과 민족적 정체성을 확인
+
+🎯 정신력 개발:
+• 힘든 경기 과정에서 극복하는 강인한 정신력 기르기
+• 상대방에 대한 존중과 예의를 배우는 스포츠맨십
+• 인내심과 집중력, 그리고 승부욕을 조절하는 능력
+
+🌾 농업과의 연관:
+• 농사일로 단련된 힘을 과시하고 인정받는 기회
+• 농업 사회에서 중요했던 체력과 근력을 평가하는 기준
+• 자연과 함께 일하며 기른 건강한 몸의 가치를 확인`;
+                }
+                if (lowerQuestion.includes('널뛰기')) {
+                    return `🦘 널뛰기를 왜 하는가?
+
+📏 키 크기 기원:
+• 널뛰기를 하면 키가 크고 건강해진다는 전통적 믿음
+• 여성들이 키가 크고 아름다워지기를 기원하는 의미
+• 신체 발달과 건강을 위한 전통적인 운동 방법
+
+🏥 건강과 체력:
+• 전신 근육을 사용하는 균형 잡힌 운동
+• 유연성과 민첩성을 기르는 자연스러운 체력 단련
+• 균형감각과 협응력을 발달시키는 효과적인 운동
+
+👥 협동과 소통:
+• 두 사람이 서로 맞춰서 함께 뛰는 협동 놀이
+• 상대방과의 호흡과 타이밍을 맞추는 소통 능력 개발
+• 서로를 배려하고 조화롭게 움직이는 협동심 기르기
+
+🎭 즐거움과 흥미:
+• 높이 뛰는 재미와 흥미진진한 놀이의 즐거움
+• 함께 뛰며 웃고 즐기는 가족과 친구들과의 소중한 시간
+• 명절의 분위기를 더욱 즐겁게 만드는 전통 놀이
+
+🏛️ 전통 문화 체험:
+• 조상들이 즐겨 했던 아름다운 전통 놀이
+• 우리 민족의 창의적이고 건강한 놀이 문화 체험
+• 전통 놀이의 재미와 의미를 몸으로 직접 느끼는 교육
+
+🌸 여성 문화:
+• 전통적으로 여성들이 즐겨 했던 우아한 놀이
+• 여성들의 건강과 아름다움을 추구하는 전통적 방법
+• 여성들이 함께 모여 즐기는 소통과 화합의 문화`;
+                }
+            }
+
+            // 전통 음식 "왜 하는지" 질문 처리
+            if (lowerQuestion.includes('왜') && (lowerQuestion.includes('해') || lowerQuestion.includes('하') || lowerQuestion.includes('먹'))) {
+                if (lowerQuestion.includes('떡국')) {
+                    return `🍜 떡국을 왜 먹는가?
+
+🎂 나이 먹기:
+• 떡국 한 그릇을 먹으면 한 살 더 먹는다는 의미
+• 새해의 시작을 알리는 전통적인 나이 계산 방식
+• 새로운 한 해를 시작하는 의식적이고 상징적인 음식
+
+🌾 풍년과 건강 기원:
+• 흰 떡국은 곡식의 정수를 담고 있어 풍년을 기원하는 의미
+• 긴 떡국은 장수를 상징하여 건강과 장수를 기원
+• 자연의 은혜에 감사하고 새로운 해의 풍요를 바람
+
+👨‍👩‍👧‍👦 가족의 화합:
+• 설날 아침에 온 가족이 함께 먹는 대표 음식
+• 가족들이 한자리에 모여 화합하는 소중한 시간
+• 조상과 후손이 함께 나누는 전통적인 식사 문화
+
+🏛️ 전통 문화 전승:
+• 조상들로부터 전해 내려온 설날의 대표 음식
+• 우리 민족의 전통적인 음식 문화를 체험하는 시간
+• 후손들에게 문화적 정체성과 전통을 전달하는 매개체
+
+🍲 영양과 건강:
+• 쌀로 만든 떡과 고기, 채소가 어우러진 균형 잡힌 음식
+• 겨울철 몸을 따뜻하게 해주는 건강한 음식
+• 자연의 재료로 만든 순수하고 깨끗한 전통 음식
+
+🙏 조상 공경:
+• 조상님들께 드리는 제사 음식으로 사용되는 전통 음식
+• 조상의 덕을 기리고 후손의 안녕을 기원하는 의미
+• 효의 정신과 조상 공경의 문화를 실천하는 음식`;
+                }
+                if (lowerQuestion.includes('송편')) {
+                    return `🌙 송편을 왜 먹는가?
+
+🌕 보름달 상징:
+• 둥근 모양이 추석의 보름달을 닮아 풍요와 단결을 상징
+• 완전한 원형으로 가족의 화합과 완전한 사랑을 의미
+• 달의 순환과 자연의 조화를 음식으로 표현한 의미
+
+🌾 수확의 감사:
+• 가을 수확의 풍성함을 기념하는 대표 음식
+• 한 해 농사의 결실을 감사하며 먹는 의미 있는 음식
+• 자연의 풍요로움에 감사하고 다음 해의 풍작을 기원
+
+👥 가족의 협력:
+• 가족들이 함께 모여 송편을 빚는 협동의 시간
+• 세대를 넘나들며 함께 만드는 소중한 추억과 경험
+• 가족 간의 유대감과 화합을 다지는 의미 있는 활동
+
+🏛️ 전통 문화 체험:
+• 조상들로부터 전해 내려온 추석의 대표 음식
+• 우리 민족의 전통적인 음식 문화를 직접 체험하는 시간
+• 전통 문화의 아름다움과 깊이를 음식으로 느끼는 교육
+
+🍯 자연의 맛:
+• 팥, 참깨, 콩 등 자연의 재료로 만든 순수한 맛
+• 인공 첨가물 없이 자연의 본래 맛을 즐기는 건강한 음식
+• 계절의 재료를 활용한 자연 친화적인 음식 문화
+
+🎨 예술적 가치:
+• 송편의 모양과 색깔을 통해 예술적 감성을 발휘
+• 가족만의 독특한 송편을 만드는 창의적 활동
+• 음식을 통해 표현하는 우리 민족의 예술적 정서`;
+                }
+                if (lowerQuestion.includes('수리취떡')) {
+                    return `🌿 수리취떡을 왜 먹는가?
+
+🛡️ 악귀 제거:
+• 수리취의 독특한 향으로 악귀와 나쁜 기운을 쫓는 의미
+• 여름철 질병과 액운을 예방하고 건강을 지키려는 전통적 믿음
+• 자연의 약초로 몸을 보호하고 정화하는 지혜
+
+🌞 여름 건강:
+• 단오 시기에 먹어 여름철 건강을 미리 준비하는 음식
+• 수리취의 약효로 여름 더위와 질병에 대한 저항력 강화
+• 계절 변화에 맞춰 건강을 관리하는 전통적인 방법
+
+🏛️ 전통 문화 전승:
+• 조상들로부터 전해 내려온 단오의 대표 음식
+• 우리 민족의 자연 친화적이고 건강한 음식 문화
+• 전통 문화의 지혜와 가치를 음식으로 체험하는 시간
+
+🌱 자연의 은혜:
+• 들에서 자란 수리취를 활용한 자연 친화적 음식
+• 자연의 약초를 음식으로 만드는 조상들의 지혜
+• 자연과 조화롭게 살아가는 우리 민족의 생활 철학
+
+👥 가족의 화합:
+• 단오날 가족들이 함께 수리취떡을 만들어 먹는 시간
+• 전통 음식을 함께 준비하며 가족 간의 유대감 강화
+• 세대를 잇는 전통 문화 전승의 소중한 경험
+
+🍽️ 계절의 맛:
+• 단오 시기 수리취의 제철 맛을 즐기는 계절 음식
+• 자연의 리듬에 맞춘 음식 문화의 아름다움
+• 계절별 특색 있는 음식으로 일상의 즐거움을 더하는 문화`;
+                }
+                if (lowerQuestion.includes('팥죽')) {
+                    return `🍲 팥죽을 왜 먹는가?
+
+🔴 액운 제거:
+• 팥의 빨간색이 악귀를 쫓는다고 믿어 액운을 막는 의미
+• 동지의 긴 밤을 무사히 지내기 위한 전통적 의식
+• 나쁜 기운을 물리치고 좋은 기운을 받아들이려는 마음
+
+❄️ 겨울 건강:
+• 추운 겨울철 몸을 따뜻하게 해주는 건강한 음식
+• 팥의 영양분으로 겨울철 체력을 보강하는 전통적 방법
+• 계절 변화에 맞춰 건강을 관리하는 조상들의 지혜
+
+🌙 밤과 낮의 전환:
+• 일년 중 밤이 가장 긴 동지에 먹는 특별한 음식
+• 긴 밤을 지내고 낮이 길어지는 것을 기념하는 의미
+• 자연의 순환과 변화를 음식으로 체험하는 시간
+
+🏛️ 전통 문화 체험:
+• 조상들로부터 전해 내려온 동지의 대표 음식
+• 우리 민족의 전통적인 계절 음식 문화를 체험하는 시간
+• 전통 문화의 의미와 가치를 음식으로 느끼는 교육
+
+👥 가족의 화합:
+• 동지날 가족들이 함께 팥죽을 끓여 먹는 소중한 시간
+• 추운 겨울에 가족들이 모여 따뜻한 시간을 보내는 의미
+• 가족 간의 유대감과 화합을 다지는 전통적 식사 문화
+
+🍯 자연의 영양:
+• 팥과 쌀로 만든 자연스럽고 영양가 높은 음식
+• 인공 첨가물 없이 자연의 재료만으로 만든 건강한 음식
+• 자연의 순수한 맛과 영양을 그대로 담은 전통 음식`;
+                }
+                if (lowerQuestion.includes('오곡밥')) {
+                    return `🍚 오곡밥을 왜 먹는가?
+
+🌾 풍년 기원:
+• 다섯 가지 곡식으로 풍성한 수확을 기원하는 의미
+• 다양한 곡식의 조화로 농사의 풍요를 상징
+• 자연의 은혜에 감사하고 다음 해의 풍작을 바람
+
+🏥 건강과 영양:
+• 다섯 가지 곡식의 영양을 골고루 섭취하는 건강한 음식
+• 각기 다른 영양소가 조화를 이루어 균형 잡힌 식사
+• 전통적인 영양학의 지혜를 담은 현명한 음식 선택
+
+🌕 보름달의 의미:
+• 정월대보름의 보름달처럼 완전함을 상징하는 음식
+• 다섯 가지 곡식이 하나로 어우러지는 화합의 의미
+• 완전하고 조화로운 새해를 시작하려는 마음
+
+🏛️ 전통 문화 전승:
+• 조상들로부터 전해 내려온 정월대보름의 대표 음식
+• 우리 민족의 전통적인 음식 문화를 체험하는 시간
+• 전통 문화의 지혜와 가치를 음식으로 느끼는 교육
+
+👥 가족의 화합:
+• 정월대보름에 온 가족이 함께 먹는 특별한 음식
+• 가족들이 한자리에 모여 화합하는 소중한 시간
+• 세대를 넘나들며 함께 나누는 전통적 식사 문화
+
+🌱 자연과의 조화:
+• 자연에서 자란 다양한 곡식을 활용한 자연 친화적 음식
+• 계절의 재료를 활용한 자연의 리듬에 맞춘 음식 문화
+• 자연과 조화롭게 살아가는 우리 민족의 생활 철학`;
+                }
+                if (lowerQuestion.includes('부럼')) {
+                    return `🥜 부럼을 왜 먹는가?
+
+🛡️ 부스럼 예방:
+• 부럼을 깨물어 부스럼이 생기지 않도록 기원하는 의미
+• 정월대보름에 액운을 미리 예방하고 건강을 지키려는 전통적 믿음
+• 나쁜 일이 생기지 않도록 미리 대비하는 조상들의 지혜
+
+🏥 건강과 영양:
+• 견과류의 풍부한 영양소로 건강을 보강하는 음식
+• 겨울철 몸의 저항력을 높이고 체력을 기르는 전통적 방법
+• 자연의 영양을 그대로 담은 건강하고 순수한 음식
+
+💪 힘과 지혜:
+• 견과류의 단단함을 통해 힘과 지혜를 기원하는 의미
+• 어려운 일을 견뎌내는 강인한 정신력과 체력을 바람
+• 삶의 어려움을 극복하는 힘과 지혜를 상징
+
+🏛️ 전통 문화 체험:
+• 조상들로부터 전해 내려온 정월대보름의 전통 음식
+• 우리 민족의 전통적인 음식 문화를 체험하는 시간
+• 전통 문화의 의미와 가치를 음식으로 느끼는 교육
+
+👥 가족의 화합:
+• 정월대보름 아침에 가족들이 함께 부럼을 먹는 시간
+• 가족들이 한자리에 모여 건강을 기원하는 소중한 시간
+• 가족 간의 유대감과 화합을 다지는 전통적 식사 문화
+
+🌰 자연의 선물:
+• 자연에서 자란 견과류를 활용한 자연 친화적 음식
+• 계절의 재료를 활용한 자연의 리듬에 맞춘 음식 문화
+• 자연의 순수한 맛과 영양을 그대로 담은 전통 음식`;
+                }
+                if (lowerQuestion.includes('귀밝이술')) {
+                    return `🍶 귀밝이술을 왜 마시는가?
+
+👂 귀 밝기 기원:
+• 한 해 동안 귀가 밝아져서 좋은 소식만 들리기를 기원
+• 나쁜 소식은 듣지 않고 좋은 소식만 들으려는 전통적 믿음
+• 정월대보름에 새해의 행운과 좋은 소식을 바라는 마음
+
+🏥 건강과 기운:
+• 적당한 술로 혈액 순환을 돕고 몸을 따뜻하게 하는 효과
+• 겨울철 몸의 기운을 북돋아주는 전통적인 건강 관리법
+• 자연 발효된 전통 술의 영양과 효능을 활용한 건강법
+
+🏛️ 전통 문화 체험:
+• 조상들로부터 전해 내려온 정월대보름의 전통 음료
+• 우리 민족의 전통적인 음주 문화를 체험하는 시간
+• 전통 문화의 의미와 가치를 음료로 느끼는 교육
+
+👥 가족의 화합:
+• 정월대보름에 가족들이 함께 귀밝이술을 마시는 시간
+• 가족들이 한자리에 모여 화합하는 소중한 시간
+• 가족 간의 유대감과 화합을 다지는 전통적 식사 문화
+
+🌾 자연의 발효:
+• 자연 발효된 전통 술로 자연의 힘을 그대로 담은 음료
+• 우리 민족의 전통적인 발효 기술의 우수성을 체험
+• 자연과 조화롭게 살아가는 우리 민족의 생활 지혜
+
+🎊 명절의 분위기:
+• 정월대보름의 즐거운 분위기를 더욱 화기애애하게 만드는 음료
+• 명절의 기쁨과 축복을 나누며 마시는 특별한 음료
+• 전통 명절의 의미와 가치를 음료로 체험하는 문화`;
+                }
+            }
+
+            // 전통 풍습 "왜 하는지" 질문 처리
+            if (lowerQuestion.includes('왜') && (lowerQuestion.includes('해') || lowerQuestion.includes('하') || lowerQuestion.includes('지내') || lowerQuestion.includes('감'))) {
+                if (lowerQuestion.includes('창포물') || lowerQuestion.includes('창포')) {
+                    return `🌿 창포물로 머리를 왜 감는가?
+
+🛡️ 악귀 제거:
+• 창포의 독특한 향으로 악귀와 나쁜 기운을 쫓는 의미
+• 여름철 질병과 액운을 예방하고 건강을 지키려는 전통적 믿음
+• 자연의 약초로 몸과 마음을 정화하고 보호하는 지혜
+
+🏥 건강과 위생:
+• 창포의 약효로 두피와 머리를 깨끗하게 하고 건강하게 유지
+• 여름철 더위로 인한 두피 질환을 예방하는 전통적인 방법
+• 자연의 약초를 활용한 건강하고 안전한 위생 관리법
+
+🌞 여름 건강 준비:
+• 단오 시기에 창포물로 머리를 감아 여름철 건강을 미리 준비
+• 여름 더위와 질병에 대한 저항력을 높이는 전통적 건강법
+• 계절 변화에 맞춰 건강을 관리하는 조상들의 지혜
+
+🏛️ 전통 문화 체험:
+• 조상들로부터 전해 내려온 단오의 대표 풍습
+• 우리 민족의 자연 친화적이고 건강한 생활 문화
+• 전통 문화의 지혜와 가치를 몸으로 직접 체험하는 시간
+
+🌱 자연과의 조화:
+• 들에서 자란 창포를 활용한 자연 친화적 생활 방식
+• 자연의 약초를 생활에 활용하는 조상들의 지혜
+• 자연과 조화롭게 살아가는 우리 민족의 생활 철학
+
+👥 가족의 화합:
+• 단오날 가족들이 함께 창포물을 준비하고 머리를 감는 시간
+• 전통 풍습을 함께 체험하며 가족 간의 유대감 강화
+• 세대를 잇는 전통 문화 전승의 소중한 경험`;
+                }
+                if (lowerQuestion.includes('세배')) {
+                    return `🙏 세배를 왜 하는가?
+
+👨‍👩‍👧‍👦 가족의 예의:
+• 설날에 어른들에게 인사하며 가족 간의 예의를 다지는 풍습
+• 조상과 후손, 어른과 아이들 간의 존경과 사랑을 표현
+• 가족의 화합과 단결을 강화하는 소중한 전통 의식
+
+🏛️ 전통 문화 전승:
+• 조상들로부터 전해 내려온 우리 민족의 대표적인 예의 문화
+• 전통적인 인사법과 예절을 배우고 실천하는 교육적 시간
+• 후손들에게 올바른 예의와 문화를 전달하는 중요한 매개체
+
+💝 효의 정신:
+• 조상님들께 감사와 존경을 표현하는 효의 정신 실천
+• 어른들께 감사하며 새해의 복을 기원하는 마음 표현
+• 전통적인 효 사상과 가족 사랑을 몸으로 실천하는 시간
+
+🎊 새해의 시작:
+• 새해의 첫날 새로운 마음으로 가족과 화해하고 화합하는 시간
+• 과거의 갈등을 정리하고 새로운 시작을 다짐하는 의미
+• 새해의 희망과 기대를 함께 나누며 가족의 유대감 강화
+
+👥 세대 간 소통:
+• 세대를 넘나들며 서로를 이해하고 소통하는 소중한 시간
+• 어른들의 지혜와 경험을 듣고 배우는 교육적 기회
+• 가족의 역사와 전통을 나누며 정체성을 확인하는 시간
+
+🌟 축복과 기원:
+• 어른들로부터 새해의 축복과 조언을 받는 의미 있는 시간
+• 가족 모두의 건강과 행복을 기원하며 화합을 다짐
+• 새해의 소망과 목표를 함께 나누며 서로를 격려하는 시간`;
+                }
+                if (lowerQuestion.includes('차례')) {
+                    return `🕯️ 차례를 왜 지내는가?
+
+🙏 조상 공경:
+• 조상님들께 감사와 존경을 표현하는 전통적인 의식
+• 조상의 덕과 지혜를 기리고 후손들의 안녕을 기원
+• 효의 정신을 실천하며 가족의 정체성을 확인하는 시간
+
+👨‍👩‍👧‍👦 가족의 화합:
+• 온 가족이 함께 모여 조상님을 기리며 화합하는 시간
+• 세대를 넘나들며 가족의 역사와 전통을 공유
+• 가족 간의 유대감과 단결을 강화하는 소중한 의식
+
+🏛️ 전통 문화 전승:
+• 조상들로부터 전해 내려온 우리 민족의 대표적인 문화
+• 전통 의식과 예절을 배우고 실천하는 교육적 시간
+• 후손들에게 문화적 정체성과 전통을 전달하는 중요한 매개체
+
+💝 정신적 성찰:
+• 조상의 삶과 지혜를 되새기며 현재를 성찰하는 시간
+• 가족의 역사와 가치를 되돌아보며 정체성을 확인
+• 진정한 효의 의미와 가족의 소중함을 되새기는 시간
+
+🌟 축복과 기원:
+• 조상님들께 가족의 건강과 행복을 기원하는 의미 있는 시간
+• 새로운 한 해의 풍요와 안녕을 조상님과 함께 기원
+• 가족의 번영과 발전을 조상님의 덕으로 돌리는 겸손한 마음
+
+🌾 자연과의 조화:
+• 자연의 순환에 맞춰 조상과 소통하는 전통적인 방식
+• 계절의 변화와 자연의 리듬을 존중하는 우리 민족의 철학
+• 자연과 조화롭게 살아가는 지혜를 조상으로부터 배우는 시간`;
+                }
+                if (lowerQuestion.includes('성묘')) {
+                    return `🌿 성묘를 왜 하는가?
+
+🙏 조상 공경:
+• 조상님의 묘소를 찾아가 인사하고 존경을 표현하는 전통 의식
+• 조상의 덕과 지혜를 기리고 후손들의 안녕을 기원
+• 효의 정신을 실천하며 가족의 정체성을 확인하는 시간
+
+🌱 자연과의 소통:
+• 조상의 묘소에서 자연과 하나 되는 경험을 하는 시간
+• 자연의 변화와 조상의 안식을 확인하며 마음의 평안을 얻음
+• 자연과 조화롭게 살아가는 지혜를 조상으로부터 배움
+
+👨‍👩‍👧‍👦 가족의 화합:
+• 온 가족이 함께 조상의 묘소를 찾아가며 화합하는 시간
+• 세대를 넘나들며 가족의 역사와 전통을 공유
+• 가족 간의 유대감과 단결을 강화하는 소중한 의식
+
+🏛️ 전통 문화 전승:
+• 조상들로부터 전해 내려온 우리 민족의 대표적인 문화
+• 전통 의식과 예절을 배우고 실천하는 교육적 시간
+• 후손들에게 문화적 정체성과 전통을 전달하는 중요한 매개체
+
+💝 정신적 치유:
+• 조상의 묘소에서 마음의 평안과 안정을 얻는 시간
+• 일상의 번잡함을 잊고 조상과 소통하며 정신적 휴식을 취함
+• 조상의 지혜와 사랑을 느끼며 마음의 위로를 받는 시간
+
+🌟 축복과 기원:
+• 조상님들께 가족의 건강과 행복을 기원하는 의미 있는 시간
+• 새로운 한 해의 풍요와 안녕을 조상님과 함께 기원
+• 가족의 번영과 발전을 조상님의 덕으로 돌리는 겸손한 마음`;
+                }
+                if (lowerQuestion.includes('달맞이')) {
+                    return `🌕 달맞이를 왜 하는가?
+
+🌙 보름달의 의미:
+• 보름달을 바라보며 자연의 아름다움과 신비로움을 감상
+• 달의 순환을 통해 자연의 리듬과 조화를 느끼는 시간
+• 보름달의 완전함과 풍요를 상징하여 한 해의 풍년을 기원
+
+🙏 소원과 기도:
+• 보름달 아래에서 개인과 가족의 소망을 빌고 기도하는 시간
+• 달의 신비로운 힘을 빌려 소원이 이루어지기를 기원
+• 자연의 은혜에 감사하며 새로운 희망과 꿈을 키우는 시간
+
+👨‍👩‍👧‍👦 가족의 화합:
+• 온 가족이 함께 보름달을 바라보며 화합하는 소중한 시간
+• 달빛 아래에서 가족 간의 소통과 유대감을 강화
+• 세대를 넘나들며 함께 나누는 아름다운 추억과 경험
+
+🏛️ 전통 문화 체험:
+• 조상들로부터 전해 내려온 우리 민족의 대표적인 문화
+• 자연을 존중하고 소통하는 전통적인 생활 방식 체험
+• 후손들에게 자연 사랑과 문화적 정체성을 전달하는 시간
+
+🌿 자연과의 교감:
+• 자연의 신비로운 아름다움을 직접 체험하는 소중한 시간
+• 달빛과 함께 자연과 하나 되는 경험을 통해 마음의 평안을 얻음
+• 자연과 조화롭게 살아가는 지혜를 몸으로 체험하는 교육
+
+🌟 희망과 기대:
+• 보름달의 밝은 빛처럼 밝은 미래를 기대하는 희망적 마음
+• 새로운 시작과 변화에 대한 긍정적 기대와 설렘
+• 자연의 순환처럼 삶의 희망과 기대를 되새기는 의미 있는 시간`;
+                }
+            }
+
+            // 전통 풍습 관련 질문 처리 (복조리 제외)
+            for (const customName in {
+                "지신밟기": 1, "귀밝이술": 1, "창포주": 1, "강강술래": 1, "수리취떡": 1,
+                "오색나물": 1, "송편": 1, "팥죽": 1, "부럼": 1, "오곡밥": 1,
+                "창포물": 1, "달맞이": 1, "성묘": 1, "차례": 1, "세배": 1,
+                "윷놀이": 1, "연날리기": 1, "널뛰기": 1, "제기차기": 1, "팽이치기": 1,
+                "그네뛰기": 1, "씨름": 1, "활쏘기": 1, "화전놀이": 1, "국화전": 1,
+                "국화주": 1, "등고": 1, "유두놀이": 1, "견우직녀": 1, "칠석제": 1,
+                "백중제": 1, "상달고사": 1
+            }) {
+                if (lowerQuestion.includes(customName.toLowerCase())) {
+                    const explanation = getTraditionalCustomExplanation(customName);
+                    if (explanation) {
+                        return explanation;
+                    }
+                }
+            }
+            
+            // 사진 자료 관련 질문 (우선순위 높임)
+            if (lowerQuestion.includes('사진') || lowerQuestion.includes('이미지') || lowerQuestion.includes('보여줘') || lowerQuestion.includes('찾아줘')) {
+                if (lowerQuestion.includes('달집태우기')) {
+                    const photo = searchPhoto('달집태우기');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('윷놀이')) {
+                    const photo = searchPhoto('윷놀이');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('강강술래')) {
+                    const photo = searchPhoto('강강술래');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('그네뛰기')) {
+                    const photo = searchPhoto('그네뛰기');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('송편')) {
+                    const photo = searchPhoto('송편빚기');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('떡국')) {
+                    const photo = searchPhoto('떡국먹기');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('연날리기')) {
+                    const photo = searchPhoto('연날리기');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('씨름')) {
+                    const photo = searchPhoto('씨름');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('지신밟기')) {
+                    const photo = searchPhoto('지신밟기');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('오곡밥')) {
+                    const photo = searchPhoto('오곡밥');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('부럼')) {
+                    const photo = searchPhoto('부럼');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('귀밝이술')) {
+                    const photo = searchPhoto('귀밝이술');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('화전')) {
+                    const photo = searchPhoto('화전');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('수리취떡')) {
+                    const photo = searchPhoto('수리취떡');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('팥죽')) {
+                    const photo = searchPhoto('팥죽');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('한과')) {
+                    const photo = searchPhoto('한과');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('약과')) {
+                    const photo = searchPhoto('약과');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('한복')) {
+                    const photo = searchPhoto('한복');
+                    const googleLink = generateImageSearchLink(photo.searchTerms);
+                    const naverLink = generateNaverImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면:\n- 구글: ${googleLink}\n- 네이버: ${naverLink}`;
+                }
+                if (lowerQuestion.includes('제기차기')) {
+                    const photo = searchPhoto('제기차기');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('팽이치기')) {
+                    const photo = searchPhoto('팽이치기');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('널뛰기')) {
+                    const photo = searchPhoto('널뛰기');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('국화전')) {
+                    const photo = searchPhoto('국화전');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('칠석과일')) {
+                    const photo = searchPhoto('칠석과일');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('백중떡')) {
+                    const photo = searchPhoto('백중떡');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('상달고사')) {
+                    const photo = searchPhoto('상달고사');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('김장')) {
+                    const photo = searchPhoto('김장');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('차례')) {
+                    const photo = searchPhoto('차례');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('성묘')) {
+                    const photo = searchPhoto('성묘');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('청명놀이')) {
+                    const photo = searchPhoto('청명놀이');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('유두목욕')) {
+                    const photo = searchPhoto('유두목욕');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('칠석기원')) {
+                    const photo = searchPhoto('칠석기원');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('백중공양')) {
+                    const photo = searchPhoto('백중공양');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('중양절놀이')) {
+                    const photo = searchPhoto('중양절놀이');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('상달김장')) {
+                    const photo = searchPhoto('상달김장');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('납월제사')) {
+                    const photo = searchPhoto('납월제사');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                if (lowerQuestion.includes('섣달그믐')) {
+                    const photo = searchPhoto('섣달그믐');
+                    const searchLink = generateImageSearchLink(photo.searchTerms);
+                    return `📸 ${photo.description}\n\n🔍 사진에서 볼 수 있는 것들: ${photo.visualElements.join(', ')}\n📍 장소: ${photo.location}\n📅 시기: ${photo.season}\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                // 일반적인 세시풍속 사진 검색
+                if (lowerQuestion.includes('세시풍속')) {
+                    const searchLink = generateImageSearchLink('한국 세시풍속 전통명절');
+                    return `📸 한국 세시풍속 사진을 찾아드릴게요!\n\n🔍 볼 수 있는 것들: 전통명절, 전통놀이, 전통음식, 전통의상 등\n📍 장소: 전국 각지\n📅 시기: 연중\n\n🔗 사진을 보려면 여기를 클릭하세요: ${searchLink}`;
+                }
+                
+                // 학습되지 않은 세시풍속에 대한 실시간 검색 제공
+                const searchLinks = generateRealTimeSearchLinks(question);
+                return `죄송합니다. "${question}"에 대한 사진 자료는 아직 학습되지 않았습니다.\n\n🔍 실시간 검색을 통해 찾아보세요:\n\n📱 구글 검색:\n- 일반 검색: ${searchLinks.google}\n- 이미지 검색: ${searchLinks.googleImage}\n\n🇰🇷 네이버 검색:\n- 일반 검색: ${searchLinks.naver}\n- 이미지 검색: ${searchLinks.naverImage}\n\n💡 추천 검색어: "${question} 세시풍속", "${question} 전통", "${question} 사진"\n\n📸 학습된 세시풍속 사진들:\n🎯 전통놀이: 달집태우기, 윷놀이, 강강술래, 그네뛰기, 연날리기, 씨름, 제기차기, 팽이치기, 널뛰기\n🍽️ 전통음식: 송편, 떡국, 오곡밥, 부럼, 귀밝이술, 화전, 수리취떡, 팥죽, 한과, 약과, 국화전, 칠석과일, 백중떡, 김장\n🎭 전통풍습: 지신밟기, 상달고사, 차례, 성묘, 청명놀이, 유두목욕, 칠석기원, 백중공양, 중양절놀이, 상달김장, 납월제사, 섣달그믐\n👗 전통의상: 한복\n🌟 전체: 세시풍속`;
+            }
+
+            // 강강술래 관련 (다양한 표현 포함)
+            if (lowerQuestion.includes('강강술래') || lowerQuestion.includes('강강수래')) {
+                if (lowerQuestion.includes('왜') && (lowerQuestion.includes('해') || lowerQuestion.includes('하') || lowerQuestion.includes('추'))) {
+                    return `🎭 강강술래를 왜 하는가?
+
+🌾 농업과 풍년 기원:
+• 추석은 한 해 농사 수확을 마치는 시기로, 풍년에 대한 감사와 다음 해의 풍작을 기원
+• 원을 그리며 도는 동작은 태양의 순환과 자연의 생명력을 상징
+• 함께 춤추며 공동체의 화합과 단결을 다짐
+
+👥 사회적 의미:
+• 조선시대 여성들이 자유롭게 소통할 수 있는 드문 기회
+• 나이와 신분을 초월하여 모두가 평등하게 참여
+• 마을 사람들 간의 유대감을 강화하고 갈등을 해소하는 역할
+
+🎵 정신적 치유:
+• 일상의 고단함을 잊고 즐거움을 나누는 시간
+• 노래와 춤을 통해 스트레스를 해소하고 마음을 밝게 함
+• 달빛 아래에서 자연과 하나 되는 경험
+
+🏛️ 문화 전승:
+• 조상들의 지혜와 전통을 후손에게 전달
+• 지역의 고유한 문화적 정체성을 유지
+• 세대를 잇는 문화적 소통의 매개체 역할
+
+💝 현대적 가치:
+• 디지털 시대에 소외된 인간적 교감의 중요성
+• 전통 문화의 아름다움과 깊이를 체험
+• 우리 문화에 대한 자부심과 정체성 확립`;
+                }
+                if (lowerQuestion.includes('유래') || lowerQuestion.includes('어디서') || lowerQuestion.includes('기원')) {
+                    return `🎭 강강술래의 유래와 의미
+
+📜 역사적 유래:
+• 조선시대부터 전해져 온 전통 민속놀이로, 특히 전라남도 해남과 진도 지역에서 발달
+• '강강수월래'라는 말은 '강물이 흐르는 것처럼 부드럽게'라는 의미
+• 원래는 임진왜란 때 이순신 장군이 군사들을 속이기 위해 여성들이 밤에 강강술래를 추며 적의 정찰을 방해했다는 설화가 있음
+
+🌙 추석과의 관계:
+• 추석 밤 달이 뜬 들판에서 추는 것이 전통
+• 가을 수확을 마친 후 풍년을 감사하고 다음 해의 풍작을 기원하는 의미
+• 여성들이 중심이 되어 공동체의 화합과 단결을 다지는 역할
+
+🎵 춤의 특징:
+• 손을 맞잡고 원을 그리며 돌아가며 춤을 춤
+• 리더가 노래를 부르면 나머지가 따라 부르는 '선창 후창' 방식
+• 자연스럽고 부드러운 동작으로 흥을 돋우며 즐김
+
+🏆 문화적 가치:
+• 2009년 유네스코 인류무형문화유산으로 등재
+• 우리나라 전통 여성 문화의 대표적인 상징
+• 지역 공동체의 정체성과 문화적 유대감을 형성하는 중요한 역할
+
+💫 현대적 의미:
+• 전통 문화 계승과 발전의 상징
+• 여성들의 자유로운 표현과 소통의 공간
+• 세대를 넘나드는 문화적 소통의 매개체`;
+                }
+                return '강강술래는 추석 밤에 여성들이 손을 맞잡고 원을 그리며 노래하고 춤추는 전통 민속놀이입니다. 농사의 풍년을 기원하고 공동체의 화합을 도모하는 의미를 지니며, 유네스코 인류무형문화유산으로도 지정되어 있습니다. 유래에 대해 더 자세히 알고 싶으시면 "강강술래 유래"라고 질문해보세요!';
+            }
+            
+            // 설날 관련
+            if (lowerQuestion.includes('설날')) {
+                if (lowerQuestion.includes('왜') && (lowerQuestion.includes('해') || lowerQuestion.includes('하') || lowerQuestion.includes('지내'))) {
+                    return `🎊 설날을 왜 지내는가?
+
+🌅 새로운 시작:
+• 새해의 첫날로 새로운 한 해의 시작을 기념하는 의미
+• 과거의 모든 것을 정리하고 새로운 마음으로 새해를 시작
+• 희망과 기대를 가지고 새로운 목표를 세우는 시간
+
+👨‍👩‍👧‍👦 가족의 화합:
+• 평소 각자 바쁘게 살아온 가족들이 한자리에 모이는 소중한 시간
+• 세대 간의 소통과 유대감을 강화하는 기회
+• 조상과 후손이 함께 모여 가문의 정체성을 확인
+
+🙏 조상 공경:
+• 차례를 지내며 조상님들께 감사와 존경을 표현
+• 조상의 덕을 기리고 후손들이 잘 살도록 보살펴달라고 기원
+• 효의 정신을 실천하는 중요한 시간
+
+🌾 농업과 자연:
+• 농경사회에서 자연의 순환과 농사의 시작을 기념
+• 풍년을 기원하고 자연의 은혜에 감사
+• 자연과 조화롭게 살아가는 지혜를 배움
+
+🎮 전통 놀이와 문화:
+• 윷놀이, 연날리기, 널뛰기 등 전통 놀이를 통해 즐거움을 나눔
+• 우리 전통 문화를 체험하고 계승하는 시간
+• 세대를 넘나드는 문화적 소통의 장`;
+                }
+                if (lowerQuestion.includes('떡국') && lowerQuestion.includes('이유')) {
+                    return '떡국을 먹는 이유는 흰 떡국이 곡식의 정수를 담고 있어 한 해의 풍년과 건강을 기원하는 의미이며, 긴 떡국이 장수를 상징합니다.';
+                }
+                if (lowerQuestion.includes('유래') || lowerQuestion.includes('어떻게')) {
+                    return '설날은 농경사회에서 새해의 시작을 기념하는 의미로 시작되었습니다. 조상들이 자연의 순환에 따라 새해를 맞이하며 가족의 화합과 풍년을 기원하는 마음에서 비롯되었습니다.';
+                }
+                const seollal = sesiData.winter.festivals.설날;
+                return `설날${getKoreanParticle('설날')} 음력 1월 1일에 지내는 새해의 첫날로, 우리나라에서 가장 중요한 명절입니다. 이 날에는 ${seollal.activities.join(', ')} 등의 풍습을 행하며, ${seollal.foods.join(', ')} 등의 음식을 먹습니다. ${seollal.meaning}`;
+            }
+            
+            // 단오 관련 문맥 분석
+            if (lowerQuestion.includes('단오')) {
+                if (lowerQuestion.includes('왜') && (lowerQuestion.includes('해') || lowerQuestion.includes('하') || lowerQuestion.includes('지내'))) {
+                    return `🌿 단오를 왜 지내는가?
+
+☀️ 여름의 시작:
+• 음력 5월 5일로 여름이 본격적으로 시작되는 시점
+• 여름철 건강을 미리 준비하고 더위를 이기기 위한 준비
+• 자연의 변화에 맞춰 몸과 마음을 조절하는 지혜
+
+🏥 건강과 액운 예방:
+• 창포로 머리를 감아 여름철 질병을 예방
+• 수리취떡을 먹어 몸의 독을 제거하고 건강을 기원
+• 악귀와 질병을 쫓아내고 좋은 기운을 받기 위함
+
+🎮 전통 놀이와 운동:
+• 그네뛰기로 여성들의 건강과 아름다움을 기원
+• 씨름으로 남성들의 힘과 용맹함을 겨룸
+• 활쏘기로 집중력과 정확성을 기르고 수렵 기술 연마
+
+👥 사회적 화합:
+• 마을 사람들이 함께 모여 놀이를 즐기며 화합
+• 나이와 신분을 초월하여 모두가 평등하게 참여
+• 지역 공동체의 유대감을 강화하는 시간
+
+🌸 자연과의 조화:
+• 여름꽃들이 만개하는 시기를 즐기며 자연 감상
+• 자연의 순환에 맞춰 생활하는 농경 사회의 지혜
+• 자연의 생명력과 인간의 생명력을 연결하는 의미
+
+🏛️ 전통 문화 전승:
+• 조상들로부터 전해 내려온 여름 풍습을 계승
+• 우리 민족의 고유한 문화적 정체성을 유지
+• 후손들에게 전통 문화의 가치를 전달`;
+                }
+                // 구체적인 질문들 처리
+                if (lowerQuestion.includes('그네') && (lowerQuestion.includes('타') || lowerQuestion.includes('뛰') || lowerQuestion.includes('놀이'))) {
+                    return '네, 단오에는 그네뛰기를 합니다. 그네뛰기는 단오의 대표 놀이로, 여성들이 그네에 올라가서 앞뒤로 흔들리는 놀이입니다.';
+                }
+                
+                if (lowerQuestion.includes('창포') && (lowerQuestion.includes('머리') || lowerQuestion.includes('감') || lowerQuestion.includes('씻'))) {
+                    return '네, 단오에는 창포로 머리를 감습니다. 창포는 단오에 창포물에 머리를 감는 풍습으로, 머리를 깨끗하게 하고 건강을 기원하는 의미가 있습니다.';
+                }
+                
+                if (lowerQuestion.includes('수리취떡') && (lowerQuestion.includes('먹') || lowerQuestion.includes('왜') || lowerQuestion.includes('이유'))) {
+                    return '네, 단오에는 수리취떡을 먹습니다. 수리취떡은 단오에 먹는 전통 떡으로, 수리취 잎으로 감싸서 만들어 여름의 건강을 기원하는 의미가 있습니다.';
+                }
+                
+                if (lowerQuestion.includes('유래') || lowerQuestion.includes('어떻게')) {
+                    return '단오는 중국에서 전래된 명절로, 우리나라에서는 여름의 대표적인 명절로 발전했습니다. 여름의 시작과 건강, 액운을 쫓는 의미로 행해집니다.';
+                }
+                
+                // 단오 일반 정보
+                const dano = sesiData.summer.festivals.단오;
+                return `단오${getKoreanParticle('단오')} 음력 5월 5일에 지내는 여름의 대표적인 명절입니다. 이 날에는 ${dano.activities.join(', ')} 등의 풍습을 행하며, ${dano.foods.join(', ')} 등의 음식을 먹습니다. ${dano.meaning}`;
+            }
+            
+            // 추석 관련 문맥 분석
+            if (lowerQuestion.includes('추석')) {
+                if (lowerQuestion.includes('왜') && (lowerQuestion.includes('해') || lowerQuestion.includes('하') || lowerQuestion.includes('지내'))) {
+                    return `🌕 추석을 왜 지내는가?
+
+🌾 수확의 감사:
+• 한 해 농사 수확을 마치고 그 풍성함에 감사하는 시간
+• 자연의 은혜와 농부들의 노고를 기리는 의미
+• 다음 해의 풍작을 기원하고 농업의 중요성을 되새김
+
+👨‍👩‍👧‍👦 가족의 화합:
+• 일 년 중 가장 풍성한 시기에 온 가족이 모이는 소중한 시간
+• 평소 멀리 떨어져 살던 가족들이 고향으로 모여 화합
+• 세대를 넘나드는 가족 간의 소통과 유대감 강화
+
+🙏 조상 공경:
+• 조상님들께 풍성한 수확의 기쁨을 함께 나누는 의미
+• 조상의 덕과 지혜에 감사하며 후손들의 안녕을 기원
+• 차례를 지내며 효의 정신을 실천하는 시간
+
+🌙 자연과의 조화:
+• 가장 아름다운 보름달을 감상하며 자연과 하나 되는 경험
+• 달의 순환과 농사의 순환을 연결하는 의미
+• 자연의 법칙에 따라 살아가는 지혜를 배움
+
+🎮 전통 놀이와 문화:
+• 강강술래, 줄다리기 등 전통 놀이로 즐거움을 나눔
+• 우리 전통 문화를 체험하고 계승하는 시간
+• 지역 공동체의 정체성과 유대감을 형성
+
+🍯 풍요와 나눔:
+• 풍성한 수확물을 나누며 이웃과 함께 기쁨을 누림
+• 나눔의 정신과 상생의 가치를 실천
+• 풍요로운 마음으로 새로운 시작을 다짐`;
+                }
+                // 추석에 특정 음식 먹는지 질문하는 경우
+                if (lowerQuestion.includes('송편') && (lowerQuestion.includes('먹') || lowerQuestion.includes('왜') || lowerQuestion.includes('이유'))) {
+                    return '네, 추석에는 송편을 먹습니다. 송편은 추석에 빚는 전통 떡으로, 둥근 모양이 보름달을 상징하여 가족의 화합과 풍년을 기원하는 의미가 있습니다.';
+                }
+                if (lowerQuestion.includes('떡국') && (lowerQuestion.includes('먹') || lowerQuestion.includes('왜') || lowerQuestion.includes('이유'))) {
+                    const searchLinks = generateRealTimeSearchLinks(question);
+                    return `죄송합니다. "추석에 떡국을 먹나요?"에 대한 정보는 아직 학습되지 않았습니다.\n\n🔍 실시간 검색을 통해 찾아보세요:\n\n📱 구글: ${searchLinks.google}\n🇰🇷 네이버: ${searchLinks.naver}\n📷 네이버 이미지: ${searchLinks.naverImage}\n\n💡 추천 검색어: "추석 떡국", "추석 전통 음식", "추석과 떡국"\n\n📝 알고 있는 정보: 떡국은 일반적으로 설날에 먹는 전통 음식입니다.`;
+                }
+                
+                if (lowerQuestion.includes('유래') || lowerQuestion.includes('어떻게')) {
+                    return '추석은 농경사회에서 추수를 감사하는 의미로 시작된 명절입니다. 가을 수확을 감사하고 조상에게 감사하는 마음에서 비롯되었습니다.';
+                }
+                const chuseok = sesiData.autumn.festivals.추석;
+                return `추석${getKoreanParticle('추석')} 음력 8월 15일에 지내는 가을의 대표적인 명절로 한가위라고도 합니다. 이 날에는 ${chuseok.activities.join(', ')} 등의 풍습을 행하며, ${chuseok.foods.join(', ')} 등의 음식을 먹습니다. ${chuseok.meaning}`;
+            }
+            
+            // 정월대보름 관련 문맥 분석
+            if (lowerQuestion.includes('정월대보름') || lowerQuestion.includes('대보름')) {
+                if (lowerQuestion.includes('왜') && (lowerQuestion.includes('해') || lowerQuestion.includes('하') || lowerQuestion.includes('지내'))) {
+                    return `🌕 정월대보름을 왜 지내는가?
+
+🌙 보름달의 의미:
+• 정월의 첫 보름달을 맞이하며 한 해의 시작을 축복
+• 달의 순환을 통해 자연의 리듬과 조화를 느끼는 시간
+• 보름달의 완전함과 풍요를 상징하여 한 해의 풍년을 기원
+
+🔥 액운 제거와 소원 기원:
+• 달집태우기로 나쁜 기운을 태워 없애고 좋은 기운을 받음
+• 부럼을 깨물며 부스럼이 생기지 않도록 기원
+• 귀밝이술을 마시며 좋은 소식만 들리기를 바람
+
+🌾 농업과 풍년:
+• 오곡밥을 먹어 다섯 가지 곡식의 풍성한 수확을 기원
+• 농사철의 시작을 알리는 중요한 시점
+• 자연의 은혜에 감사하고 농업의 중요성을 되새김
+
+👥 공동체 화합:
+• 마을 사람들이 함께 모여 달집태우기 행사 참여
+• 지역 공동체의 유대감과 단결을 강화하는 시간
+• 나눔과 상생의 정신을 실천하는 기회
+
+🏛️ 전통 문화 전승:
+• 조상들로부터 전해 내려온 보름달 관련 풍습을 계승
+• 우리 민족의 고유한 문화적 정체성을 유지
+• 후손들에게 전통 문화의 가치와 의미를 전달
+
+🎯 한 해의 계획:
+• 새해의 첫 보름달 아래에서 한 해의 목표와 계획을 세움
+• 희망과 기대를 가지고 새로운 시작을 다짐
+• 자연의 순환에 맞춰 삶의 리듬을 조절하는 지혜`;
+                }
+                // 구체적인 질문들 처리
+                if (lowerQuestion.includes('눈썹') && (lowerQuestion.includes('하얘') || lowerQuestion.includes('하얗') || lowerQuestion.includes('하얀'))) {
+                    const searchLinks = generateRealTimeSearchLinks(question);
+                    return `죄송합니다. "정월대보름에 눈썹이 하얘지나요?"에 대한 정보는 아직 학습되지 않았습니다.\n\n🔍 실시간 검색을 통해 찾아보세요:\n\n📱 구글: ${searchLinks.google}\n🇰🇷 네이버: ${searchLinks.naver}\n📷 네이버 이미지: ${searchLinks.naverImage}\n\n💡 추천 검색어: "정월대보름 눈썹", "대보름 눈썹", "눈썹 하얘지는 이유"\n\n📝 알고 있는 정보: 정월대보름에는 여러 전통 풍습이 있습니다.`;
+                }
+                
+                if (lowerQuestion.includes('부럼') && (lowerQuestion.includes('먹') || lowerQuestion.includes('왜') || lowerQuestion.includes('이유'))) {
+                    return '네, 정월대보름에는 부럼을 먹습니다. 부럼은 정월대보름에 먹는 견과류로, 부스럼이 생기지 않도록 기원하는 의미가 있습니다.';
+                }
+                
+                if (lowerQuestion.includes('오곡밥') && (lowerQuestion.includes('먹') || lowerQuestion.includes('왜') || lowerQuestion.includes('이유'))) {
+                    return '네, 정월대보름에는 오곡밥을 먹습니다. 오곡밥은 다섯 가지 곡물로 만든 밥으로, 한 해의 풍년과 건강을 기원하는 의미가 있습니다.';
+                }
+                
+                if (lowerQuestion.includes('귀밝이술') && (lowerQuestion.includes('마시') || lowerQuestion.includes('왜') || lowerQuestion.includes('이유'))) {
+                    return '네, 정월대보름에는 귀밝이술을 마십니다. 귀밝이술은 정월대보름에 마시는 술로, 귀가 밝아져서 좋은 소식만 들리기를 기원하는 의미가 있습니다.';
+                }
+                
+                // 정월대보름 일반 정보
+                const daeboreum = sesiData.spring.festivals.정월대보름;
+                return `정월대보름${getKoreanParticle('정월대보름')} 음력 1월 15일에 지내는 명절로, 정월의 첫 보름달을 맞이하는 날입니다. 이 날에는 ${daeboreum.activities.join(', ')} 등의 풍습을 행하며, ${daeboreum.foods.join(', ')} 등을 먹습니다. ${daeboreum.meaning}`;
+            }
+            
+            // 동지 관련 문맥 분석
+            if (lowerQuestion.includes('동지')) {
+                if (lowerQuestion.includes('왜') && (lowerQuestion.includes('해') || lowerQuestion.includes('하') || lowerQuestion.includes('지내'))) {
+                    return `❄️ 동지를 왜 지내는가?
+
+🌙 밤과 낮의 전환점:
+• 일년 중 밤이 가장 긴 날로, 자연의 순환에서 중요한 전환점
+• 동지 이후부터 낮이 점점 길어지기 시작하여 새로운 시작을 의미
+• 자연의 리듬과 조화를 느끼며 삶의 변화를 인식하는 시간
+
+🔥 겨울의 극한과 새로운 희망:
+• 가장 어둡고 추운 시기를 극복하며 새로운 희망을 품음
+• 팥죽의 빨간색으로 악귀를 쫓고 좋은 기운을 받아들이려 함
+• 어둠이 지나가면 빛이 온다는 희망적 메시지
+
+🏥 건강과 액운 예방:
+• 팥죽을 먹어 겨울철 질병을 예방하고 건강을 기원
+• 추운 겨울을 무사히 지내기 위한 몸과 마음의 준비
+• 액운을 쫓고 다음 해의 건강과 행운을 기원
+
+🌾 농업과 자연:
+• 겨울철 농사 준비와 자연의 휴식을 준비하는 시점
+• 자연의 순환에 맞춰 농업 계획을 세우는 지혜
+• 자연과 조화롭게 살아가는 농경 사회의 철학
+
+👥 가족의 화합:
+• 추운 겨울에 가족들이 함께 모여 따뜻한 시간을 보냄
+• 팥죽을 함께 나누며 가족 간의 유대감을 강화
+• 어려운 시기를 함께 극복하는 상호부조의 정신
+
+🏛️ 전통 문화 전승:
+• 조상들로부터 전해 내려온 겨울 풍습을 계승
+• 우리 민족의 자연관과 철학을 후손에게 전달
+• 세대를 넘나드는 문화적 정체성 유지`;
+                }
+                // 구체적인 질문들 처리
+                if (lowerQuestion.includes('팥죽') && (lowerQuestion.includes('먹') || lowerQuestion.includes('왜') || lowerQuestion.includes('이유'))) {
+                    return '네, 동지에는 팥죽을 먹습니다. 팥죽은 동지에 먹는 전통 음식으로, 팥의 빨간색이 악귀를 쫓는다고 믿어 액운을 막고 건강을 기원하는 의미가 있습니다.';
+                }
+                
+                if (lowerQuestion.includes('밤') && (lowerQuestion.includes('긴') || lowerQuestion.includes('길') || lowerQuestion.includes('가장'))) {
+                    return '네, 동지는 일년 중 밤이 가장 긴 날입니다. 동지 이후부터는 낮이 점점 길어지기 시작하여 새로운 시작을 의미하는 날입니다.';
+                }
+                
+                // 동지 일반 정보
+                const dongji = sesiData.winter.festivals.동지;
+                return `동지${getKoreanParticle('동지')} 음력 11월 하순에 지내는 명절로, 일년 중 밤이 가장 긴 날입니다. 이 날에는 ${dongji.activities.join(', ')} 등의 풍습을 행하며, ${dongji.foods.join(', ')} 등을 먹습니다. ${dongji.meaning}`;
+            }
+            
+            
+            // 삼짇날 관련
+            if (lowerQuestion.includes('삼짇날') || lowerQuestion.includes('삼월삼일')) {
+                const samjinnal = sesiData.spring.festivals.삼짇날;
+                return `삼짇날${getKoreanParticle('삼짇날')} ${samjinnal.date}에 지내는 명절로, ${samjinnal.description}입니다. 이 날에는 ${samjinnal.activities.join(', ')} 등의 풍습을 행하며, ${samjinnal.foods.join(', ')} 등을 먹습니다. ${samjinnal.meaning}`;
+            }
+            
+            // 청명 관련
+            if (lowerQuestion.includes('청명')) {
+                const cheongmyeong = sesiData.spring.festivals.청명;
+                return `청명${getKoreanParticle('청명')} ${cheongmyeong.date}에 지내는 명절로, ${cheongmyeong.description}입니다. 이 날에는 ${cheongmyeong.activities.join(', ')} 등의 풍습을 행하며, ${cheongmyeong.foods.join(', ')} 등을 먹습니다. ${cheongmyeong.meaning}`;
+            }
+            
+            // 한식 관련
+            if (lowerQuestion.includes('한식')) {
+                if (lowerQuestion.includes('왜') && (lowerQuestion.includes('해') || lowerQuestion.includes('하') || lowerQuestion.includes('지내'))) {
+                    return `🕯️ 한식을 왜 지내는가?
+
+🙏 조상 추모:
+• 조상님들에 대한 깊은 추모와 존경의 마음을 표현
+• 개자추의 효심 이야기에서 유래된 조상 공경의 의미
+• 후손들이 조상의 덕을 기리고 감사하는 시간
+
+🔥 불 끄기의 의미:
+• 하루 동안 불을 피우지 않고 찬 음식만 먹음
+• 조상의 영혼이 편안히 쉴 수 있도록 조용한 분위기 조성
+• 현세의 번잡함을 잠시 멈추고 조상과 소통하는 시간
+
+🌱 자연과의 조화:
+• 봄의 시작을 맞아 자연의 순환에 맞춰 생활
+• 자연의 생명력이 다시 시작되는 시점을 인식
+• 자연과 조화롭게 살아가는 지혜를 배움
+
+👥 가족의 단합:
+• 찬 음식을 함께 준비하며 가족 간의 협력과 화합
+• 조상 이야기를 나누며 가족의 역사와 정체성 확인
+• 세대 간의 소통과 유대감을 강화하는 시간
+
+🏛️ 전통 문화 전승:
+• 조상들로부터 전해 내려온 효의 정신을 계승
+• 우리 민족의 조상 공경 문화를 후손에게 전달
+• 전통 의식과 예절을 배우고 실천하는 기회
+
+💝 정신적 성찰:
+• 일상의 바쁜 삶을 잠시 멈추고 내면을 돌아보는 시간
+• 조상의 삶과 지혜를 통해 현재를 성찰
+• 진정한 효의 의미와 가족의 소중함을 되새김`;
+                }
+                const hansik = sesiData.spring.festivals.한식;
+                return `한식${getKoreanParticle('한식')} ${hansik.date}에 지내는 명절로, ${hansik.description}입니다. 이 날에는 ${hansik.activities.join(', ')} 등의 풍습을 행하며, ${hansik.foods.join(', ')} 등을 먹습니다. ${hansik.meaning}`;
+            }
+            
+            // 유두 관련
+            if (lowerQuestion.includes('유두')) {
+                if (lowerQuestion.includes('왜') && (lowerQuestion.includes('해') || lowerQuestion.includes('하') || lowerQuestion.includes('지내'))) {
+                    return `💧 유두를 왜 지내는가?
+
+☀️ 여름 더위 극복:
+• 본격적인 여름 더위가 시작되는 시점에서 건강을 준비
+• 시원한 과일과 물놀이로 더위를 이기고 건강을 유지
+• 여름철 질병 예방과 체력 보강을 위한 지혜
+
+🍉 자연의 풍요:
+• 여름 과일들이 풍성하게 익어나는 시기를 즐김
+• 수박, 오이, 참외 등 시원한 과일로 더위를 달래는 자연의 은혜
+• 자연의 풍요로움에 감사하고 건강을 기원
+
+🏊 물놀이와 놀이:
+• 더위를 피해 물놀이를 하며 즐거운 시간을 보냄
+• 가족과 친구들과 함께 하는 소중한 추억 만들기
+• 자연과 함께하는 건강한 여가 활동
+
+🌿 자연과의 조화:
+• 여름의 자연 변화에 맞춰 생활하는 지혜
+• 자연의 리듬을 따라 건강하게 살아가는 방법
+• 자연의 생명력과 인간의 생명력을 연결하는 의미
+
+👥 가족의 화합:
+• 더운 여름에 가족들이 함께 모여 시원한 시간을 보냄
+• 시원한 음식을 함께 나누며 가족 간의 유대감 강화
+• 어려운 계절을 함께 극복하는 상호부조의 정신`;
+                }
+                const yudu = sesiData.summer.festivals.유두;
+                return `유두${getKoreanParticle('유두')} ${yudu.date}에 지내는 명절로, ${yudu.description}입니다. 이 날에는 ${yudu.activities.join(', ')} 등의 풍습을 행하며, ${yudu.foods.join(', ')} 등을 먹습니다. ${yudu.meaning}`;
+            }
+            
+            // 칠석 관련
+            if (lowerQuestion.includes('칠석')) {
+                if (lowerQuestion.includes('왜') && (lowerQuestion.includes('해') || lowerQuestion.includes('하') || lowerQuestion.includes('지내'))) {
+                    return `💕 칠석을 왜 지내는가?
+
+💫 견우직녀의 전설:
+• 견우와 직녀가 일 년에 한 번 만나는 로맨틱한 날
+• 사랑하는 사람들과의 만남과 소중함을 되새기는 시간
+• 진정한 사랑의 의미와 가치를 생각해보는 기회
+
+🌟 소원과 기도:
+• 밤하늘의 별을 바라보며 소원을 빌고 기도하는 시간
+• 견우성과 직녀성의 만남을 통해 희망과 꿈을 키움
+• 개인적인 소망과 가족의 안녕을 기원
+
+🧵 여성의 재능:
+• 바느질과 손재주를 기르고 여성의 재능을 발휘하는 날
+• 전통적인 여성 문화와 예술을 계승하는 의미
+• 창의적 활동과 예술적 감성을 키우는 시간
+
+🌙 별과 자연:
+• 밤하늘의 아름다운 별들을 감상하며 자연과 교감
+• 우주의 신비로움과 자연의 위대함을 느끼는 시간
+• 자연과 하나 되는 경험을 통해 마음의 평안을 얻음
+
+👥 가족과 사랑:
+• 가족 간의 사랑과 유대감을 강화하는 시간
+• 세대를 넘나드는 사랑의 의미를 나누는 기회
+• 진정한 사랑과 헌신의 가치를 배우는 교육적 시간`;
+                }
+                const chilseok = sesiData.summer.festivals.칠석;
+                return `칠석${getKoreanParticle('칠석')} ${chilseok.date}에 지내는 명절로, ${chilseok.description}입니다. 이 날에는 ${chilseok.activities.join(', ')} 등의 풍습을 행하며, ${chilseok.foods.join(', ')} 등을 먹습니다. ${chilseok.meaning}`;
+            }
+            
+            // 백중 관련
+            if (lowerQuestion.includes('백중')) {
+                if (lowerQuestion.includes('왜') && (lowerQuestion.includes('해') || lowerQuestion.includes('하') || lowerQuestion.includes('지내'))) {
+                    return `🕉️ 백중을 왜 지내는가?
+
+🙏 부처님 귀환:
+• 부처님께서 하늘에서 돌아오신 것을 기리는 불교적 의미
+• 중원의 풍요와 평화를 기원하는 종교적 행사
+• 정신적 평안과 마음의 안정을 추구하는 시간
+
+🌾 중원의 풍요:
+• 여름의 끝과 가을의 시작을 알리는 중요한 시점
+• 농사의 풍년과 자연의 풍요를 기원하는 의미
+• 자연의 은혜에 감사하고 다음 해의 풍작을 바람
+
+👥 공동체 화합:
+• 마을 사람들이 함께 모여 백중제와 백중놀이를 즐김
+• 지역 공동체의 유대감과 단결을 강화하는 시간
+• 나눔과 상생의 정신을 실천하는 기회
+
+🏛️ 전통 문화 전승:
+• 조상들로부터 전해 내려온 불교 문화와 민속을 계승
+• 우리 민족의 종교적 정체성과 문화적 다양성을 유지
+• 후손들에게 전통 문화의 가치와 의미를 전달
+
+💝 나눔과 베풂:
+• 백중떡과 과일을 나누며 이웃과 함께 기쁨을 누림
+• 베풂의 정신과 나눔의 가치를 실천하는 시간
+• 사회적 연대와 상호부조의 정신을 강화`;
+                }
+                const baekjung = sesiData.summer.festivals.백중;
+                return `백중${getKoreanParticle('백중')} ${baekjung.date}에 지내는 명절로, ${baekjung.description}입니다. 이 날에는 ${baekjung.activities.join(', ')} 등의 풍습을 행하며, ${baekjung.foods.join(', ')} 등을 먹습니다. ${baekjung.meaning}`;
+            }
+            
+            // 중양절 관련
+            if (lowerQuestion.includes('중양절')) {
+                if (lowerQuestion.includes('왜') && (lowerQuestion.includes('해') || lowerQuestion.includes('하') || lowerQuestion.includes('지내'))) {
+                    return `🌼 중양절을 왜 지내는가?
+
+🌸 국화 감상:
+• 가을을 대표하는 국화가 만발하는 시기를 즐김
+• 자연의 아름다움과 생명력을 감상하며 마음의 평안을 얻음
+• 예술적 감성과 자연 사랑을 기르는 시간
+
+🏔️ 산놀이와 등고:
+• 산에 올라가 국화를 감상하며 자연과 교감
+• 등고를 통해 체력을 기르고 자연의 신선한 공기를 마심
+• 자연과 하나 되는 경험을 통해 정신적 안정을 얻음
+
+🏥 건강과 장수:
+• 국화주와 국화차를 마시며 건강과 장수를 기원
+• 가을의 신선한 공기와 자연의 기운으로 몸을 보양
+• 계절 변화에 맞춰 건강을 관리하는 지혜
+
+👥 가족의 화합:
+• 가족들이 함께 산에 올라 국화를 감상하며 화합
+• 자연 속에서 가족 간의 소통과 유대감을 강화
+• 세대를 넘나드는 자연 사랑과 건강한 생활 습관 전수
+
+🏛️ 전통 문화 전승:
+• 조상들로부터 전해 내려온 가을 풍습을 계승
+• 우리 민족의 자연 사랑과 예술적 감성을 유지
+• 후손들에게 자연의 소중함과 건강한 생활의 가치를 전달
+
+🎯 한 해의 마무리:
+• 가을의 아름다움을 마지막으로 즐기며 한 해를 정리
+• 겨울을 준비하며 마음과 몸의 준비를 하는 시간
+• 자연의 순환에 맞춰 삶의 리듬을 조절하는 지혜`;
+                }
+                const jungyangjeol = sesiData.autumn.festivals.중양절;
+                return `중양절${getKoreanParticle('중양절')} ${jungyangjeol.date}에 지내는 명절로, ${jungyangjeol.description}입니다. 이 날에는 ${jungyangjeol.activities.join(', ')} 등의 풍습을 행하며, ${jungyangjeol.foods.join(', ')} 등을 먹습니다. ${jungyangjeol.meaning}`;
+            }
+            
+            // 상달고사 관련
+            if (lowerQuestion.includes('상달고사')) {
+                const sangdalgosa = sesiData.autumn.festivals.상달고사;
+                return `상달고사${getKoreanParticle('상달고사')} ${sangdalgosa.date}에 지내는 명절로, ${sangdalgosa.description}입니다. 이 날에는 ${sangdalgosa.activities.join(', ')} 등의 풍습을 행하며, ${sangdalgosa.foods.join(', ')} 등을 먹습니다. ${sangdalgosa.meaning}`;
+            }
+            
+            // 상달음식 관련 (우선순위 높임)
+            if (lowerQuestion.includes('상달음식') || lowerQuestion.includes('상달 음식')) {
+                const sangdal = sesiData.autumn.festivals.상달;
+                return `상달에 먹는 전통 음식은 ${sangdal.foods.join(', ')} 등이 있습니다. 상달은 음력 10월로, 수확의 계절에 맞는 풍성한 음식들을 준비하여 조상님께 감사의 마음을 전합니다.`;
+            }
+            
+            // 상달 관련
+            if (lowerQuestion.includes('상달')) {
+                const sangdal = sesiData.autumn.festivals.상달;
+                return `상달${getKoreanParticle('상달')} ${sangdal.date}에 지내는 명절로, ${sangdal.description}입니다. 이 날에는 ${sangdal.activities.join(', ')} 등의 풍습을 행하며, ${sangdal.foods.join(', ')} 등을 먹습니다. ${sangdal.meaning}`;
+            }
+            
+            // 납월 관련
+            if (lowerQuestion.includes('납월')) {
+                const napwol = sesiData.winter.festivals.납월;
+                return `납월${getKoreanParticle('납월')} ${napwol.date}에 지내는 명절로, ${napwol.description}입니다. 이 날에는 ${napwol.activities.join(', ')} 등의 풍습을 행하며, ${napwol.foods.join(', ')} 등을 먹습니다. ${napwol.meaning}`;
+            }
+            
+            // 섣달그믐 관련
+            if (lowerQuestion.includes('섣달그믐')) {
+                const seotdalgeumeum = sesiData.winter.festivals.섣달그믐;
+                return `섣달그믐${getKoreanParticle('섣달그믐')} ${seotdalgeumeum.date}에 지내는 명절로, ${seotdalgeumeum.description}입니다. 이 날에는 ${seotdalgeumeum.activities.join(', ')} 등의 풍습을 행하며, ${seotdalgeumeum.foods.join(', ')} 등을 먹습니다. ${seotdalgeumeum.meaning}`;
+            }
+            
+            // 음식 관련 질문
+            if (lowerQuestion.includes('떡국')) {
+                const tteokguk = sesiData.foods.떡국;
+                return `떡국${getKoreanParticle('떡국')} 설날에 먹는 전통 음식으로, ${tteokguk.meaning}입니다. ${tteokguk.ingredients.join(', ')} 등으로 만들어지며, ${tteokguk.details}`;
+            }
+            
+            if (lowerQuestion.includes('송편')) {
+                const songpyeon = sesiData.foods.송편;
+                return `송편${getKoreanParticle('송편')} 추석에 빚는 전통 떡으로, ${songpyeon.meaning}입니다. ${songpyeon.ingredients.join(', ')} 등으로 만들어지며, ${songpyeon.details}`;
+            }
+            
+            if (lowerQuestion.includes('팥죽')) {
+                const patjuk = sesiData.foods.팥죽;
+                return `팥죽${getKoreanParticle('팥죽')} 동지에 먹는 전통 음식으로, ${patjuk.meaning}입니다. ${patjuk.ingredients.join(', ')} 등으로 만들어지며, ${patjuk.details}`;
+            }
+            
+            if (lowerQuestion.includes('부럼')) {
+                const bureom = sesiData.foods.부럼;
+                return `부럼${getKoreanParticle('부럼')} 정월대보름에 먹는 견과류로, ${bureom.meaning}입니다. ${bureom.ingredients.join(', ')} 등으로 구성되며, ${bureom.details}`;
+            }
+            
+            if (lowerQuestion.includes('귀밝이술')) {
+                const gwibalkiSul = sesiData.foods.귀밝이술;
+                return `귀밝이술${getKoreanParticle('귀밝이술')} 정월대보름에 마시는 술로, ${gwibalkiSul.meaning}입니다. ${gwibalkiSul.ingredients.join(', ')} 등으로 만들어지며, ${gwibalkiSul.details}`;
+            }
+            
+            if (lowerQuestion.includes('화전')) {
+                const hwajeon = sesiData.foods.화전;
+                return `화전${getKoreanParticle('화전')} 삼짇날에 먹는 떡으로, ${hwajeon.meaning}입니다. ${hwajeon.ingredients.join(', ')} 등으로 만들어지며, ${hwajeon.details}`;
+            }
+            
+            if (lowerQuestion.includes('한과')) {
+                const hangwa = sesiData.foods.한과;
+                return `한과${getKoreanParticle('한과')} 전통 과자로, ${hangwa.meaning}입니다. ${hangwa.ingredients.join(', ')} 등으로 만들어지며, ${hangwa.details}`;
+            }
+            
+            // 놀이 관련 질문
+            if (lowerQuestion.includes('윷놀이')) {
+                const yutnori = sesiData.games.윷놀이;
+                return `윷놀이${getKoreanParticle('윷놀이')} ${yutnori.description}로, ${yutnori.meaning}입니다. ${yutnori.details}`;
+            }
+            
+            if (lowerQuestion.includes('연날리기')) {
+                const yeonnalligi = sesiData.games.연날리기;
+                return `연날리기${getKoreanParticle('연날리기')} ${yeonnalligi.description}로, ${yeonnalligi.meaning}입니다. ${yeonnalligi.details}`;
+            }
+            
+            if (lowerQuestion.includes('그네뛰기')) {
+                const geuneTtwigi = sesiData.games.그네뛰기;
+                return `그네뛰기${getKoreanParticle('그네뛰기')} ${geuneTtwigi.description}로, ${geuneTtwigi.meaning}입니다. ${geuneTtwigi.details}`;
+            }
+            
+            if (lowerQuestion.includes('씨름')) {
+                const ssireum = sesiData.games.씨름;
+                return `씨름${getKoreanParticle('씨름')} ${ssireum.description}로, ${ssireum.meaning}입니다. ${ssireum.details}`;
+            }
+            
+            if (lowerQuestion.includes('널뛰기')) {
+                const neolTtwigi = sesiData.games.널뛰기;
+                return `널뛰기${getKoreanParticle('널뛰기')} ${neolTtwigi.description}로, ${neolTtwigi.meaning}입니다. ${neolTtwigi.details}`;
+            }
+            
+            if (lowerQuestion.includes('제기차기')) {
+                const jegichagi = sesiData.games.제기차기;
+                return `제기차기${getKoreanParticle('제기차기')} ${jegichagi.description}로, ${jegichagi.meaning}입니다. ${jegichagi.details}`;
+            }
+            
+            if (lowerQuestion.includes('팽이치기')) {
+                const paengichigi = sesiData.games.팽이치기;
+                return `팽이치기${getKoreanParticle('팽이치기')} ${paengichigi.description}로, ${paengichigi.meaning}입니다. ${paengichigi.details}`;
+            }
+            
+            if (lowerQuestion.includes('활쏘기')) {
+                const hwalssoogi = sesiData.games.활쏘기;
+                return `활쏘기${getKoreanParticle('활쏘기')} ${hwalssoogi.description}로, ${hwalssoogi.meaning}입니다. ${hwalssoogi.details}`;
+            }
+            
+            if (lowerQuestion.includes('줄다리기')) {
+                const julDareugi = sesiData.games.줄다리기;
+                return `줄다리기${getKoreanParticle('줄다리기')} ${julDareugi.description}로, ${julDareugi.meaning}입니다. ${julDareugi.details}`;
+            }
+            
+            // 청도 지역 관련 질문
+            if (lowerQuestion.includes('청도') || lowerQuestion.includes('경북')) {
+                const cheongdo = sesiData.cheongdo;
+                if (lowerQuestion.includes('달집태우기')) {
+                    const event = cheongdo.specialFestivals.청도달집태우기;
+                    return `청도달집태우기${getKoreanParticle('청도달집태우기')} ${event.date}에 청도읍성에서 열리는 ${event.description}입니다. ${event.participants}이 참여하여 ${event.meaning}입니다. ${event.details}`;
+                }
+                return `청도${getKoreanParticle('청도')} 경상북도에 위치한 전통문화가 풍부한 지역입니다. 특히 정월대보름에 전국 최대 규모의 달집태우기 행사가 열리며, 청도읍성과 대비사대웅전 등의 문화유산이 있습니다.`;
+            }
+            
+            
+            // 시각적 자료 관련 질문 (그림 그리기)
+            if (lowerQuestion.includes('그림') || lowerQuestion.includes('그리기') || lowerQuestion.includes('그려')) {
+                if (lowerQuestion.includes('달집태우기')) {
+                    const visual = sesiData.visualMaterials.달집태우기;
+                    return `달집태우기 그림을 그릴 때는 ${visual.elements.join(', ')} 등을 포함하고, ${visual.colors.join(', ')} 등의 색상을 사용하여 ${visual.mood}를 표현하면 됩니다.`;
+                }
+                if (lowerQuestion.includes('정월대보름')) {
+                    const visual = sesiData.visualMaterials.정월대보름;
+                    return `정월대보름 그림을 그릴 때는 ${visual.elements.join(', ')} 등을 포함하고, ${visual.colors.join(', ')} 등의 색상을 사용하여 ${visual.mood}를 표현하면 됩니다.`;
+                }
+                if (lowerQuestion.includes('윷놀이')) {
+                    const visual = sesiData.visualMaterials.윷놀이;
+                    return `윷놀이 그림을 그릴 때는 ${visual.elements.join(', ')} 등을 포함하고, ${visual.colors.join(', ')} 등의 색상을 사용하여 ${visual.mood}를 표현하면 됩니다.`;
+                }
+                if (lowerQuestion.includes('강강술래')) {
+                    const visual = sesiData.visualMaterials.강강술래;
+                    return `강강술래 그림을 그릴 때는 ${visual.elements.join(', ')} 등을 포함하고, ${visual.colors.join(', ')} 등을 사용하여 ${visual.mood}를 표현하면 됩니다.`;
+                }
+                if (lowerQuestion.includes('그네뛰기')) {
+                    const visual = sesiData.visualMaterials.그네뛰기;
+                    return `그네뛰기 그림을 그릴 때는 ${visual.elements.join(', ')} 등을 포함하고, ${visual.colors.join(', ')} 등을 사용하여 ${visual.mood}를 표현하면 됩니다.`;
+                }
+                if (lowerQuestion.includes('송편')) {
+                    const visual = sesiData.visualMaterials.송편빚기;
+                    return `송편빚기 그림을 그릴 때는 ${visual.elements.join(', ')} 등을 포함하고, ${visual.colors.join(', ')} 등을 사용하여 ${visual.mood}를 표현하면 됩니다.`;
+                }
+                if (lowerQuestion.includes('떡국')) {
+                    const visual = sesiData.visualMaterials.떡국먹기;
+                    return `떡국먹기 그림을 그릴 때는 ${visual.elements.join(', ')} 등을 포함하고, ${visual.colors.join(', ')} 등을 사용하여 ${visual.mood}를 표현하면 됩니다.`;
+                }
+                if (lowerQuestion.includes('연날리기')) {
+                    const visual = sesiData.visualMaterials.연날리기;
+                    return `연날리기 그림을 그릴 때는 ${visual.elements.join(', ')} 등을 포함하고, ${visual.colors.join(', ')} 등을 사용하여 ${visual.mood}를 표현하면 됩니다.`;
+                }
+                return '세시풍속 그림을 그릴 때는 전통적인 요소들(한복, 전통 음식, 전통 놀이 등)과 따뜻하고 화목한 색감을 사용하여 우리 전통문화의 아름다움을 표현하면 됩니다!';
+            }
+            
+            // 학습되지 않은 세시풍속에 대한 실시간 검색 제공
+            const searchLinks = generateRealTimeSearchLinks(question);
+            
+            // 질문 유형에 따른 맞춤 검색어 생성
+            let customSearchTerms = [];
+            if (questionTypes.includes('yesNo')) {
+                customSearchTerms = [`"${question}"`, `"${question} 세시풍속"`, `"${question} 전통"`];
+            } else if (questionTypes.includes('what')) {
+                customSearchTerms = [`"${question}"`, `"${question} 의미"`, `"${question} 정의"`];
+            } else if (questionTypes.includes('why')) {
+                customSearchTerms = [`"${question}"`, `"${question} 이유"`, `"${question} 유래"`];
+            } else if (questionTypes.includes('how')) {
+                customSearchTerms = [`"${question}"`, `"${question} 방법"`, `"${question} 하는법"`];
+            } else if (questionTypes.includes('when')) {
+                customSearchTerms = [`"${question}"`, `"${question} 시기"`, `"${question} 언제"`];
+            } else if (questionTypes.includes('where')) {
+                customSearchTerms = [`"${question}"`, `"${question} 장소"`, `"${question} 어디"`];
+            } else {
+                customSearchTerms = [`"${question} 세시풍속"`, `"${question} 전통"`, `"${question} 의미"`];
+            }
+            
+            return `죄송합니다. "${question}"에 대한 정보는 아직 학습되지 않았습니다.\n\n🔍 실시간 검색을 통해 찾아보세요:\n\n📱 구글: ${searchLinks.google}\n🇰🇷 네이버: ${searchLinks.naver}\n📷 네이버 이미지: ${searchLinks.naverImage}\n\n💡 추천 검색어: ${customSearchTerms.join(', ')}\n\n🎯 학습된 세시풍속 주제들:\n🌸 봄: 설날, 정월대보름, 삼짇날, 청명, 한식\n☀️ 여름: 단오, 유두, 칠석, 백중\n🍂 가을: 추석, 중양절, 상달\n❄️ 겨울: 동지, 섣달그믐\n\n🎮 전통놀이: 윷놀이, 강강술래, 그네뛰기, 씨름, 연날리기, 제기차기, 팽이치기, 널뛰기\n🍽️ 전통음식: 떡국, 송편, 오곡밥, 부럼, 귀밝이술, 화전, 수리취떡, 팥죽, 한과, 약과\n🎭 전통풍습: 지신밟기, 상달고사, 차례, 성묘\n\n📸 사진 자료도 검색 가능합니다!`;
+        }
+
+        // 관리자 데이터 관련 함수들
+        function loadAdminData() {
+            const saved = localStorage.getItem('adminData');
+            if (saved) {
+                adminData = JSON.parse(saved);
+                // Set 객체 복원
+                adminData.users = new Set(adminData.users);
+            }
+            updateAdminStats();
+        }
+
+        function saveAdminData() {
+            // Set 객체를 배열로 변환하여 저장
+            const dataToSave = {
+                ...adminData,
+                users: Array.from(adminData.users)
+            };
+            localStorage.setItem('adminData', JSON.stringify(dataToSave));
+        }
+
+        function logQuestion(question, answer) {
+            const questionData = {
+                question: question,
+                answer: answer,
+                user: currentUser.nickname,
+                timestamp: new Date().toISOString(),
+                category: categorizeQuestion(question),
+                keywords: extractKeywords(question)
+            };
+            
+            adminData.questions.push(questionData);
+            adminData.users.add(currentUser.nickname);
+            
+            // 키워드 통계 업데이트
+            questionData.keywords.forEach(keyword => {
+                adminData.keywords[keyword] = (adminData.keywords[keyword] || 0) + 1;
+            });
+            
+            // 카테고리 통계 업데이트
+            const category = questionData.category;
+            adminData.categories[category] = (adminData.categories[category] || 0) + 1;
+            
+            saveAdminData();
+            updateAdminStats();
+        }
+
+        function categorizeQuestion(question) {
+            const lowerQuestion = question.toLowerCase();
+            if (lowerQuestion.includes('설날')) return '설날';
+            if (lowerQuestion.includes('단오')) return '단오';
+            if (lowerQuestion.includes('추석')) return '추석';
+            if (lowerQuestion.includes('강강술래')) return '전통놀이';
+            if (lowerQuestion.includes('음식')) return '음식';
+            if (lowerQuestion.includes('놀이')) return '놀이';
+            return '기타';
+        }
+
+        function extractKeywords(question) {
+            const keywords = [];
+            const keywordMap = {
+                '설날': ['설날', '새해', '떡국', '세배'],
+                '단오': ['단오', '창포', '그네', '씨름'],
+                '추석': ['추석', '한가위', '송편', '강강술래', '강강수월래'],
+                '놀이': ['놀이', '윷놀이', '연날리기', '널뛰기'],
+                '음식': ['음식', '떡국', '송편', '전', '나물'],
+                '유래': ['유래', '기원', '어디서', '왜', '시작', '탄생', '역사']
+            };
+            
+            Object.entries(keywordMap).forEach(([category, words]) => {
+                words.forEach(word => {
+                    if (question.includes(word)) {
+                        keywords.push(word);
+                    }
+                });
+            });
+            
+            return [...new Set(keywords)]; // 중복 제거
+        }
+
+        function updateAdminStats() {
+            const today = new Date().toDateString();
+            const todayQuestions = adminData.questions.filter(q => 
+                new Date(q.timestamp).toDateString() === today
+            ).length;
+            
+            document.getElementById('totalQuestions').textContent = adminData.questions.length;
+            document.getElementById('todayQuestions').textContent = todayQuestions;
+            document.getElementById('activeUsers').textContent = adminData.users.size;
+            document.getElementById('popularTopics').textContent = Object.keys(adminData.categories).length;
+            
+            updateQuestionLog();
+            updatePopularQuestions();
+            updateKeywordAnalysis();
+        }
+
+        function updateQuestionLog() {
+            const logContainer = document.getElementById('questionLog');
+            const recentQuestions = adminData.questions.slice(-10).reverse();
+            
+            if (recentQuestions.length === 0) {
+                logContainer.innerHTML = '<div class="no-data">아직 질문이 없습니다.</div>';
+                return;
+            }
+            
+            logContainer.innerHTML = recentQuestions.map(q => `
+                <div class="question-item">
+                    <div class="question-user">${q.user}</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="question-time">${new Date(q.timestamp).toLocaleString()}</div>
+                </div>
+            `).join('');
+        }
+
+        function updatePopularQuestions() {
+            const container = document.getElementById('popularQuestions');
+            const questionCounts = {};
+            
+            adminData.questions.forEach(q => {
+                questionCounts[q.question] = (questionCounts[q.question] || 0) + 1;
+            });
+            
+            const popular = Object.entries(questionCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+            
+            if (popular.length === 0) {
+                container.innerHTML = '<div class="no-data">아직 데이터가 없습니다.</div>';
+                return;
+            }
+            
+            container.innerHTML = popular.map(([question, count]) => `
+                <div class="question-item">
+                    <div class="question-text">${question}</div>
+                    <div class="question-time">${count}회 질문</div>
+                </div>
+            `).join('');
+        }
+
+        function updateKeywordAnalysis() {
+            const container = document.getElementById('keywordAnalysis');
+            const keywords = Object.entries(adminData.keywords)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
+            
+            if (keywords.length === 0) {
+                container.innerHTML = '<div class="no-data">아직 데이터가 없습니다.</div>';
+                return;
+            }
+            
+            container.innerHTML = keywords.map(([keyword, count]) => `
+                <div class="question-item">
+                    <div class="question-text">${keyword}</div>
+                    <div class="question-time">${count}회 언급</div>
+                </div>
+            `).join('');
+        }
+
+        function exportData() {
+            const dataStr = JSON.stringify(adminData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'admin_data.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function clearOldData() {
+            if (confirm('30일 이상 된 데이터를 삭제하시겠습니까?')) {
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                
+                adminData.questions = adminData.questions.filter(q => 
+                    new Date(q.timestamp) > thirtyDaysAgo
+                );
+                
+                saveAdminData();
+                updateAdminStats();
+                alert('오래된 데이터가 삭제되었습니다.');
+            }
+        }
+
+        function clearAllQuestionHistory() {
+            if (confirm('모든 질문 기록을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+                // 모든 질문 기록 삭제
+                adminData.questions = [];
+                adminData.users = new Set();
+                adminData.keywords = {};
+                adminData.categories = {};
+                
+                // localStorage에서도 삭제
+                localStorage.removeItem('adminData');
+                
+                // UI 업데이트
+                updateQuestionLog();
+                updateAdminStats();
+                
+                alert('모든 질문 기록이 삭제되었습니다.');
+            }
+        }
+
+        function refreshStats() {
+            loadAdminData();
+            alert('통계가 새로고침되었습니다.');
+        }
+    </script>
+
+
+</body></html>
